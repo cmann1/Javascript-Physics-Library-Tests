@@ -120,9 +120,13 @@ namespace overlay
 		fontFamily?:string,
 		textColour?:string,
 		lineHeight?:number,
+
 		iconScale?:number,
 		iconPadding?:number,
-		bounds?:OverlayBounds
+
+		bounds?:OverlayBounds,
+		halign?:'left'|'centre'|'right',
+		valign?:'top'|'middle'|'bottom'
 	}
 
 	export class OverlayBounds
@@ -176,7 +180,9 @@ namespace overlay
 				lineHeight: 14,
 				iconScale: 1,
 				iconPadding: 5,
-				bounds: Overlay.bounds
+				bounds: Overlay.bounds,
+				halign:'centre',
+				valign:'middle'
 			});
 		}
 
@@ -232,8 +238,16 @@ namespace overlay
 			//
 
 			const bounds = this.options.bounds;
-			var originX = this.x - totalWidth / 2;
-			var originY = this.y - totalHeight / 2;
+			var originX = options.halign == 'left'
+				? this.x
+				: (options.halign == 'right'
+					? this.x - totalWidth
+					: this.x - totalWidth / 2);
+			var originY = options.valign == 'top'
+				? this.y
+                : (options.valign == 'bottom'
+					? this.y - totalHeight
+					: this.y - totalHeight / 2);
 
 			if(originX + totalWidth > bounds.x2)
 			{
