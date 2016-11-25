@@ -110,7 +110,7 @@ namespace engines
 
 			var boxWidth:number = 10;
 			var boxHeight:number = 14;
-			var pyramidHeight:number = 20; // < Cannot handle more
+			var pyramidHeight:number = 24; // < Cannot handle more
 
 			for (var y:number = 1; y <= pyramidHeight; y++) {
 				for (var x:number = 0; x < y; x++) {
@@ -127,6 +127,8 @@ namespace engines
 			}
 
 			this.world.add(this.bodies);
+
+			this.addWarning(this.stageWidth / 2, 20, 'Fewer bodies added due\nto poor performance');
 		}
 
 		protected runInternal(deltaTime:number, timestamp:number)

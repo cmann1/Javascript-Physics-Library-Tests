@@ -161,6 +161,15 @@ namespace engines
 		}
 
 		/*
+		 *** Utility Methods
+		 */
+
+		protected addWarning(x, y, message:string)
+		{
+			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning));
+		}
+
+		/*
 		 *** Events
 		 */
 
