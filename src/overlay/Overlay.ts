@@ -162,10 +162,10 @@ namespace overlay
 
 		protected lines:string[] = [];
 
-		constructor(x:number, y:number, text:string = null, icon:OverlayIconDef = null, options:OverlayOptions)
+		constructor(x:number, y:number, text:string = null, icon:OverlayIconDef = null, options?:OverlayOptions)
 		{
-			this.x = x;
-			this.y = y;
+			this.x = isNaN(x) ? 0 : x;
+			this.y = isNaN(y) ? 0 : y;
 			this.text = text;
 			this.icon = icon;
 

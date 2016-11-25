@@ -19,6 +19,7 @@ namespace engines
 
 	export abstract class DemoEngineBase
 	{
+
 		protected canvas:HTMLCanvasElement;
 		protected context:CanvasRenderingContext2D;
 		protected stageWidth:number;
@@ -60,6 +61,11 @@ namespace engines
 		clear()
 		{
 			this.overlays = [];
+		}
+
+		public clearCanvas()
+		{
+			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		}
 
 		loadDemo(name:string)
@@ -126,11 +132,6 @@ namespace engines
 
 				this.onDisableDrawing();
 			}
-		}
-
-		public clearCanvas()
-		{
-			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		}
 
 		get positionIterations():number
