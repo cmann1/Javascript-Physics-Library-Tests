@@ -76,6 +76,8 @@ namespace engines
 
 		clear()
 		{
+			super.clear();
+
 			this.simulationTime = 0;
 			this.elapsedTime = 0;
 			World.clear(this.world, true);

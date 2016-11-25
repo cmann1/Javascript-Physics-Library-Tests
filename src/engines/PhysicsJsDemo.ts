@@ -53,6 +53,7 @@ namespace engines
 
 		clear()
 		{
+			super.clear();
 			this.clearCanvas();
 
 			if(this.bodies)
