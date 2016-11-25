@@ -5209,7 +5209,7 @@ declare namespace Box2D.Dynamics.Joints {
 	/**
 	* Pulley joint definition. This requires two ground anchors, two dynamic body anchor points, max lengths for each side, and a pulley ratio.
 	**/
-	export class b2PullyJointDef extends b2JointDef {
+	export class b2PulleyJointDef extends b2JointDef {
 
 		/**
 		* The first ground anchor in world coordinates. This point never moves.
@@ -5270,7 +5270,7 @@ declare namespace Box2D.Dynamics.Joints {
 		* @param anchorA Anchor A.
 		* @param anchorB Anchor B.
 		**/
-		public Initialize(bA: b2Body, bB: b2Body, gaA: Box2D.Common.Math.b2Vec2, gaB: Box2D.Common.Math.b2Vec2, anchorA: Box2D.Common.Math.b2Vec2, anchorB: Box2D.Common.Math.b2Vec2): void;
+		public Initialize(bA: b2Body, bB: b2Body, gaA: Box2D.Common.Math.b2Vec2, gaB: Box2D.Common.Math.b2Vec2, anchorA: Box2D.Common.Math.b2Vec2, anchorB: Box2D.Common.Math.b2Vec2, ratio:number): void;
 	}
 }
 

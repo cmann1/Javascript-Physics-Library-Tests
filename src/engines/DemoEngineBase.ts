@@ -5,6 +5,7 @@ namespace engines
 
 	import Overlay = overlay.Overlay;
 	import OverlayIcons = overlay.OverlayIcons;
+	import OverlayOptions = overlay.OverlayOptions;
 
 	export enum VertFormat
 	{
@@ -166,9 +167,9 @@ namespace engines
 		 *** Utility Methods
 		 */
 
-		protected addWarning(x, y, message:string)
+		protected addWarning(x, y, message:string, options?:OverlayOptions)
 		{
-			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning));
+			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning, options));
 		}
 
 		/*
@@ -188,6 +189,35 @@ namespace engines
 		/*
 		 *** Utility Methods
 		 */
+
+		static Box(x, y, w, h, format:VertFormat = VertFormat.Array, VertexClass:IVertex = null):Array<Array<number>|{x:number, y:number}|any>
+		{
+			var vertices = [];
+			const useArray = format == VertFormat.Array;
+
+			const hw = w / 2;
+			const hh = h / 2;
+
+			const boxVertices = [
+				x + hw, y + hh,
+				x - hw, y + hh,
+				x - hw, y - hh,
+				x + hw, y - hh
+			];
+
+			for(let a = 0; a < 8; a += 2)
+			{
+				let x = boxVertices[a];
+				let y = boxVertices[a + 1];
+
+				if(VertexClass)
+					vertices.push(new VertexClass(x, y));
+				else
+					vertices.push(useArray ? [x, y] : {x: x, y:y});
+			}
+
+			return vertices;
+		}
 
 		static Regular(xRadius, yRadius, edgeCount, angleOffset = 0, format:VertFormat = VertFormat.Array, VertexClass:IVertex = null):Array<Array<number>|{x:number, y:number}|any>
 		{
