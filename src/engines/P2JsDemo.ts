@@ -209,6 +209,11 @@ namespace engines
 		 *** Events
 		 */
 
+		protected onVelocityIterationsUpdate(iterations:number)
+		{
+			(this.world.solver as GSSolver).iterations = iterations;
+		}
+
 		onMouseDown = (event) =>
 		{
 			const p = [this.mouseX * SCALE, this.mouseY * SCALE];
@@ -246,13 +251,6 @@ namespace engines
 				this.handJoint = null;
 			}
 		};
-
-		protected onPositionIterationsUpdate(iterations:number) { }
-
-		protected onVelocityIterationsUpdate(iterations:number)
-		{
-			(this.world.solver as GSSolver).iterations = iterations;
-		}
 
 		/*
 		 *** Utility Methods

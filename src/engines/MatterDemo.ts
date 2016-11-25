@@ -169,14 +169,6 @@ namespace engines
 		 *** Events
 		 */
 
-		onMouseDown = (event) =>
-		{
-		};
-
-		onMouseUp = (event) =>
-		{
-		};
-
 		protected onPositionIterationsUpdate(iterations:number)
 		{
 			this.engine.positionIterations = iterations;

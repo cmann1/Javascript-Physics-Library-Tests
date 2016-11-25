@@ -146,20 +146,15 @@ namespace engines
 			}
 		};
 
-		set enableDrawing(value:boolean)
-		{
-			this._enableDrawing = value;
-
-			if(!value)
-			{
-				this.debug.clear();
-				this.stage.update();
-			}
-		}
-
 		/*
 		 *** Events
 		 */
+
+		protected onDisableDrawing()
+		{
+			this.debug.clear();
+			this.stage.update();
+		}
 
 		onMouseDown = (event) =>
 		{

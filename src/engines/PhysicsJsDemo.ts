@@ -14,6 +14,8 @@ namespace engines
 
 		setup()
 		{
+			this.autoClearCanvas = true;
+
 			Physics(
 				{
 					timestep: this.frameRateInterval * 1000
@@ -44,7 +46,6 @@ namespace engines
 				}
 			);
 		}
-
 
 		clear()
 		{
@@ -136,23 +137,9 @@ namespace engines
 			}
 		};
 
-		set enableDrawing(value:boolean)
-		{
-			this._enableDrawing = value;
-
-			if(!value)
-			{
-				this.clearCanvas();
-			}
-		}
-
 		/*
 		 *** Events
 		 */
-
-		onMouseDown = (event) => { };
-
-		onMouseUp = (event) => { };
 
 	}
 

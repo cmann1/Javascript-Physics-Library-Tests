@@ -73,9 +73,14 @@ namespace engines
 		{
 			this._enableDrawing = value;
 
-			if(this.autoClearCanvas && !value)
+			if(!value)
 			{
-				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+				if(this.autoClearCanvas)
+				{
+					this.clearCanvas();
+				}
+
+				this.onDisableDrawing();
 			}
 		}
 
@@ -114,13 +119,15 @@ namespace engines
 		 *** Events
 		 */
 
-		abstract onMouseDown;
-
-		abstract onMouseUp;
+		protected onDisableDrawing() { }
 
 		protected onPositionIterationsUpdate(iterations:number) { }
 
 		protected onVelocityIterationsUpdate(iterations:number) { }
+
+		onMouseDown = (event) => { };
+
+		onMouseUp = (event) => { };
 
 		/*
 		 *** Utility Methods
