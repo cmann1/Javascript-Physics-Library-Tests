@@ -2,9 +2,9 @@
 /// <reference path="../../easeljs.d.ts" />
 declare namespace nape {
     namespace util {
+        import ZPP_ShapeDebug = zpp_nape.util.ZPP_ShapeDebug;
         import Vec2 = nape.geom.Vec2;
         import AABB = nape.geom.AABB;
-        import ZPP_ShapeDebug = zpp_nape.util.ZPP_ShapeDebug;
         /**
          * Implementation of nape debug draw using flash/openfl||nme graphics API.
          * <br/><br/>
@@ -87,6 +87,7 @@ declare namespace nape {
 }
 declare namespace zpp_nape {
     namespace util {
+        import ShapeDebug = nape.util.ShapeDebug;
         import ZPP_Compound = zpp_nape.phys.ZPP_Compound;
         import ZPP_Mat23 = zpp_nape.geom.ZPP_Mat23;
         import ShapeList = nape.shape.ShapeList;
@@ -95,7 +96,6 @@ declare namespace zpp_nape {
         import ZPP_Body = zpp_nape.phys.ZPP_Body;
         import ZPP_Shape = zpp_nape.shape.ZPP_Shape;
         import ZPP_Arbiter = zpp_nape.dynamics.ZPP_Arbiter;
-        import ShapeDebug = nape.util.ShapeDebug;
         class ZPP_ShapeDebug extends ZPP_Debug {
             outer_zn: ShapeDebug;
             shape: createjs.Shape;
@@ -151,10 +151,10 @@ declare namespace nape {
     namespace util {
         import Space = nape.space.Space;
         import Body = nape.phys.Body;
+        import ZPP_Debug = zpp_nape.util.ZPP_Debug;
         import Mat23 = nape.geom.Mat23;
         import Vec2 = nape.geom.Vec2;
         import AABB = nape.geom.AABB;
-        import ZPP_Debug = zpp_nape.util.ZPP_Debug;
         /**
          * Debug class providing general utilities
          * <br/><br/>
