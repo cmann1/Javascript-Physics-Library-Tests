@@ -30,6 +30,7 @@ namespace app
 		private static readonly DEMO_NAMES = [
 			'Basic',
 			'Stress',
+			'Constraints',
 		];
 
 		private $canvas:JQuery;
@@ -42,7 +43,7 @@ namespace app
 		private engines:DemoEngineBase[] = [];
 		private engineIndex = -1;
 		private currentEngine:DemoEngineBase;
-		private currentDemo:number = 0;
+		private currentDemo:number = 2;
 
 		private ticker:Ticker;
 
@@ -180,20 +181,9 @@ namespace app
 
 		private updateEngineDisplay()
 		{
-			var engine = 'None';
+			var engineName = this.currentEngine.name;
 
-			if(this.currentEngine instanceof NapeDemo)
-				engine = 'Nape';
-			else if(this.currentEngine instanceof P2JsDemo)
-				engine = 'P2Js';
-			else if(this.currentEngine instanceof MatterDemo)
-				engine = 'Matter';
-			else if(this.currentEngine instanceof PhysicsJsDemo)
-				engine = 'PhysicsJs';
-			else if(this.currentEngine instanceof Box2dWebDemo)
-				engine = 'Box2dWeb';
-
-			this.$engineText.text(`${engine} (${this.engineIndex+1}/${this.engines.length})`);
+			this.$engineText.text(`${engineName} (${this.engineIndex+1}/${this.engines.length})`);
 			this.$demoText.text(`${Main.DEMO_NAMES[this.currentDemo]} (${this.currentDemo+1}/${Main.DEMO_NAMES.length})`);
 
 			// this.$engineDisplay.stop(true).show().css('opacity', 1).delay(2000).animate(

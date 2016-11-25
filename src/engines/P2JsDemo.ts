@@ -19,6 +19,8 @@ namespace engines
 	export class P2JsDemo extends DemoEngineBase
 	{
 
+		public name:string = 'P2Js';
+
 		readonly maxSubSteps = 10;
 		readonly pickPrecision = 5;
 

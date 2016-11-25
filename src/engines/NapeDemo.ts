@@ -18,6 +18,7 @@ namespace engines
 
 	export class NapeDemo extends DemoEngineBase
 	{
+		public name:string = 'Nape';
 
 		private stage:Stage;
 		private space:Space;

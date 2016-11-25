@@ -22,6 +22,8 @@ namespace engines
 	export class MatterDemo extends DemoEngineBase
 	{
 
+		public name:string = 'Matter';
+
 		private engine:Engine;
 		private world:World;
 		private render:Render;

@@ -20,6 +20,8 @@ namespace engines
 	export abstract class DemoEngineBase
 	{
 
+		public name:string = 'INVALID';
+
 		protected canvas:HTMLCanvasElement;
 		protected context:CanvasRenderingContext2D;
 		protected stageWidth:number;
@@ -79,7 +81,7 @@ namespace engines
 			}
 			else
 			{
-				console.log(`Cannot find demo: ${name}`);
+				this.addWarning(this.stageWidth / 2, 20, `Cannot find "${name}" demo for "${this.name}" engine`);
 			}
 		}
 

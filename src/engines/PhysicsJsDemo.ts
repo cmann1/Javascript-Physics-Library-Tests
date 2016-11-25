@@ -7,6 +7,8 @@ namespace engines
 	export class PhysicsJsDemo extends DemoEngineBase
 	{
 
+		public name:string = 'PhysicsJs';
+
 		world:PhysicsWorld;
 		gravity;
 		renderer:CanvasRenderer;

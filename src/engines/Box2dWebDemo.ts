@@ -21,6 +21,9 @@ namespace engines
 
 	export class Box2dWebDemo extends DemoEngineBase
 	{
+
+		public name:string = 'Box2DWeb';
+
 		private world:b2World;
 		private debugDraw:b2DebugDraw;
 		private mouseJoint:b2MouseJoint;
