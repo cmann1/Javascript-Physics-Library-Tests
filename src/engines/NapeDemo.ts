@@ -298,6 +298,29 @@ namespace engines
 					/*ratio*/ 3
 				));
 			});
+
+			withCell(2, 2, "PrismaticJoint\n(LineJoint + AngleJoint)", function (x:Function, y:Function):void {
+				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
+				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
+
+				var anchorPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
+				format(new LineJoint(
+					b1, b2,
+					b1.worldPointToLocal(anchorPoint, true),
+					b2.worldPointToLocal(anchorPoint, true),
+					/*direction*/ Vec2.weak(0, 1),
+					/*jointMin*/ -25,
+					/*jointMax*/ 75
+				));
+				anchorPoint.dispose();
+
+				format(new AngleJoint(
+					b1, b2,
+					/*jointMin*/ 0,
+					/*jointMax*/ 0,
+					/*ratio*/ 1
+				));
+			});
 		}
 
 		protected runInternal(deltaTime:number, timestamp:number)

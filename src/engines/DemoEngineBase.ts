@@ -238,6 +238,12 @@ namespace engines
 			return vertices;
 		}
 
+		static circle(context:CanvasRenderingContext2D, x, y, radius)
+		{
+			context.moveTo(x, y);
+			context.arc(x, y, radius, 0, 2 * Math.PI, false);
+		}
+
 	}
 
 }

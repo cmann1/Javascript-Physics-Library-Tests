@@ -29,8 +29,8 @@ namespace app
 
 		private static readonly DEMO_NAMES = [
 			'Basic',
-			'Stress',
 			'Constraints',
+			'Stress',
 		];
 
 		private $canvas:JQuery;
@@ -43,7 +43,7 @@ namespace app
 		private engines:DemoEngineBase[] = [];
 		private engineIndex = -1;
 		private currentEngine:DemoEngineBase;
-		private currentDemo:number = 2;
+		private currentDemo:number = 1;
 
 		private ticker:Ticker;
 
@@ -270,7 +270,7 @@ namespace app
 			this.engines.push(new P2JsDemo(this.canvas, frameRate));
 			this.engines.push(new MatterDemo(this.canvas, frameRate));
 			this.engines.push(new PhysicsJsDemo(this.canvas, frameRate));
-			this.loadEngine(1);
+			this.loadEngine(2);
 			// this.loadEngine(this.engines.length - 1);
 
 			$(window)

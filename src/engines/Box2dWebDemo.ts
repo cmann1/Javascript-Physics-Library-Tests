@@ -324,11 +324,11 @@ namespace engines
 				a2.Add(new b2Vec2(0, -size));
 				jointDef.Initialize(b1, b2, a1, a2);
 				jointDef.length = cellWidth/3*0.75 * SCALE;
-				// 	/*jointMin*/ cellWidth/3*0.75,
-				// 	/*jointMax*/ cellWidth/3*1.25
+				// 	/*jointMin*/ cellWidth/3*0.75 * SCALE,
+				// 	/*jointMax*/ cellWidth/3*1.25 * SCALE
 				this.world.CreateJoint(jointDef);
 
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(20) * DRAW_SCALE, 'Min/Max not supported', {valign: 'top'});
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Min/Max limits not supported', {valign: 'top'});
 			});
 
 			withCell(1, 1, "LineJoint", (x:Function, y:Function):void => {
@@ -360,21 +360,13 @@ namespace engines
 				jointDef.Initialize(b2, b3, new b2Vec2(b1x-size*2, b1y), new b2Vec2(b1x+size*2, b1y), a2, a3, 2);
 				this.world.CreateJoint(jointDef);
 
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(cellHeight - 10) * DRAW_SCALE, 'Dynamic anchor points not supported', {valign: 'bottom'});
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(cellHeight) * DRAW_SCALE - 10, 'Dynamic anchor points not supported', {valign: 'bottom'});
 			});
 
 			withCell(0, 2, "GearJoint", (x:Function, y:Function):void => {
 				var b1:b2Body = circle(x(cellWidth/2)-size,y(cellHeight/2),size, true);
 				var b2:b2Body = circle(x(cellWidth/2)+size*2,y(cellHeight/2),size * 2, true);
 
-				// format(new AngleJoint(
-				// 	b1, b2,
-				// 	/*jointMin*/ -Math.PI*1.5,
-				// 	/*jointMax*/ Math.PI*1.5,
-				// 	/*ratio*/ 2
-				// ));
-
-				// this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(cellHeight/2) * DRAW_SCALE, 'AngleJoint not supported');
 				var jointDef:b2GearJointDef = new b2GearJointDef();
 				jointDef.bodyA = b1;
 				jointDef.bodyB = b2;
@@ -382,7 +374,6 @@ namespace engines
 				jointDef.joint2 = b2.GetJointList().joint;
 				jointDef.ratio = 2;
 				this.world.CreateJoint(jointDef);
-
 			});
 
 			withCell(1, 2, "RevoluteJoint Motor", (x:Function, y:Function):void => {
@@ -400,7 +391,7 @@ namespace engines
 				var jointDef:b2PrismaticJointDef = new b2PrismaticJointDef();
 				jointDef.Initialize(b1, b2, b2.GetWorldCenter(), new b2Vec2(0,1));
 				jointDef.lowerTranslation = -25.0 * SCALE;
-				jointDef.upperTranslation = 100.0 * SCALE;
+				jointDef.upperTranslation = 75.0 * SCALE;
 				jointDef.enableLimit = true;
 
 				this.world.CreateJoint(jointDef);

@@ -119,6 +119,7 @@ namespace overlay
 		fontSize?:number,
 		fontFamily?:string,
 		textColour?:string,
+		textAlign?:'left'|'centre'|'right',
 		lineHeight?:number,
 
 		iconScale?:number,
@@ -177,6 +178,7 @@ namespace overlay
 				fontSize: 12,
 				fontFamily: 'sans-serif',
 				textColour: '#FFF',
+				textAlign: 'centre',
 				lineHeight: 14,
 				iconScale: 1,
 				iconPadding: 5,
@@ -196,7 +198,8 @@ namespace overlay
 				totalWidth:number,
 				iconHeight = 0,
 				textHeight = 0,
-				totalHeight:number;
+				totalHeight:number,
+				lineWidths = [];
 
 			context.save();
 
@@ -222,6 +225,7 @@ namespace overlay
 				for(let line of this.lines)
 				{
 					const width = context.measureText(line).width;
+					lineWidths.push(width);
 					if(width > textWidth)
 					{
 						textWidth = width;
@@ -275,9 +279,16 @@ namespace overlay
 
 				context.fillStyle = options.textColour;
 
-				for(let line of this.lines)
+				for(let a = 0, length = this.lines.length; a < length; a++)
 				{
-					context.fillText(line, drawX, drawY, textWidth);
+					let line = this.lines[a];
+					let width = lineWidths[a];
+					let x = options.textAlign == 'right'
+						? textWidth - width
+					    : (options.textAlign == 'centre'
+					    	? (textWidth - width) * 0.5
+							: 0);
+					context.fillText(line, drawX + x, drawY, textWidth);
 					drawY += options.lineHeight;
 				}
 
