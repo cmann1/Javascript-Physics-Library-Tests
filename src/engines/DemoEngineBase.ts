@@ -1,5 +1,10 @@
+///<reference path='../overlay/Overlay.ts'/>
+
 namespace engines
 {
+
+	import Overlay = overlay.Overlay;
+	import OverlayIcons = overlay.OverlayIcons;
 
 	export enum VertFormat
 	{
@@ -30,6 +35,8 @@ namespace engines
 		protected _enableDrawing:boolean = true;
 		protected autoClearCanvas = false;
 
+		protected overlays:Overlay[];
+
 		constructor(canvas:HTMLCanvasElement, frameRate:number)
 		{
 			this.canvas = canvas;
@@ -40,12 +47,20 @@ namespace engines
 			this.frameRate = frameRate;
 			this.frameRateInterval = 1 / frameRate;
 
+			Overlay.bounds.set(0, 0, this.stageWidth, this.stageHeight);
+
 			this.setup();
 		}
 
 		abstract setup();
 
-		abstract clear();
+		/**
+		 * super.clear() is required for all Demos overriding this method
+		 */
+		clear()
+		{
+			this.overlays = [];
+		}
 
 		loadDemo(name:string)
 		{
@@ -62,7 +77,36 @@ namespace engines
 			}
 		}
 
-		abstract run:(deltaTime:number, timestamp:number) => void;
+		/**
+		 * Runs this demo. Demos must not override this method and use runInternal instead.
+		 * @param deltaTime
+		 * @param timestamp
+		 */
+		run = (deltaTime:number, timestamp:number) =>
+		{
+			this.runInternal(deltaTime, timestamp);
+
+			if(this._enableDrawing)
+			{
+				this.renderOverlays();
+			}
+		};
+
+		protected abstract runInternal(deltaTime:number, timestamp:number);
+
+		protected renderOverlays()
+		{
+			const context = this.context;
+
+			for(let overlay of this.overlays)
+			{
+				overlay.render(context);
+			}
+		}
+
+		/*
+		 *** Getters, Setters
+		 */
 
 		public get enableDrawing():boolean
 		{

@@ -34,6 +34,8 @@ namespace engines
 
 		setup()
 		{
+			super.clear();
+
 			this.engine = Engine.create({
 				enableSleeping: true
 			});
@@ -138,7 +140,7 @@ namespace engines
 				}}
 		}
 
-		run = (deltaTime:number, timestamp:number) =>
+		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(deltaTime > 0.05)
 			{

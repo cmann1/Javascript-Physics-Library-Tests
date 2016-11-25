@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<!-- Created with Ai->Canvas Export Plug-In Version 1.2 (PC/64) -->
+<!-- By Mike Swanson (http://blog.mikeswanson.com/)             -->
+
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>info</title>
+  <script>
+
+    function init() {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      draw(ctx);
+    }
+
+    function draw(ctx) {
+
+      // layer1/Compound Path
+      ctx.save();
+      ctx.beginPath();
+
+      // layer1/Compound Path/Path
+      ctx.moveTo(11.9, 8.2);
+      ctx.bezierCurveTo(11.0, 8.2, 10.4, 7.6, 10.4, 6.8);
+      ctx.bezierCurveTo(10.4, 6.0, 11.0, 5.4, 11.9, 5.4);
+      ctx.bezierCurveTo(12.8, 5.4, 13.4, 6.0, 13.4, 6.8);
+      ctx.bezierCurveTo(13.4, 7.6, 12.8, 8.2, 11.9, 8.2);
+      ctx.closePath();
+
+      // layer1/Compound Path/Path
+      ctx.moveTo(13.4, 17.1);
+      ctx.bezierCurveTo(13.4, 17.9, 12.7, 18.6, 11.9, 18.6);
+      ctx.bezierCurveTo(11.0, 18.6, 10.3, 17.9, 10.3, 17.1);
+      ctx.lineTo(10.3, 10.9);
+      ctx.bezierCurveTo(10.3, 10.0, 11.0, 9.3, 11.9, 9.3);
+      ctx.bezierCurveTo(12.7, 9.3, 13.4, 10.0, 13.4, 10.9);
+      ctx.lineTo(13.4, 17.1);
+      ctx.closePath();
+
+      // layer1/Compound Path/Path
+      ctx.moveTo(20.3, 3.5);
+      ctx.bezierCurveTo(15.7, -1.2, 8.1, -1.2, 3.5, 3.5);
+      ctx.bezierCurveTo(-1.2, 8.1, -1.2, 15.7, 3.5, 20.3);
+      ctx.bezierCurveTo(8.1, 24.9, 15.7, 24.9, 20.3, 20.3);
+      ctx.bezierCurveTo(24.9, 15.7, 24.9, 8.1, 20.3, 3.5);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(73, 135, 203)";
+      ctx.fill();
+      ctx.restore();
+    }
+  </script>
+ </head>
+ <body onload="init()">
+   <canvas id="canvas" width="24" height="24"></canvas>
+ </body>
+</html>

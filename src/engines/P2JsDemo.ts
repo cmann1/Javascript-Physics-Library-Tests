@@ -42,6 +42,8 @@ namespace engines
 
 		clear()
 		{
+			super.clear();
+
 			this.world.clear();
 		}
 
@@ -122,7 +124,7 @@ namespace engines
 				}}
 		}
 
-		run = (deltaTime:number, timestamp:number) =>
+		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(this.handJoint)
 			{
@@ -140,7 +142,7 @@ namespace engines
 			}
 		};
 
-		render()
+		protected render()
 		{
 			const context = this.context;
 			context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -149,7 +151,7 @@ namespace engines
 		}
 
 		//noinspection JSMethodCanBeStatic
-		renderBodies(world:World, context:CanvasRenderingContext2D)
+		protected renderBodies(world:World, context:CanvasRenderingContext2D)
 		{
 			const bodies = world.bodies;
 

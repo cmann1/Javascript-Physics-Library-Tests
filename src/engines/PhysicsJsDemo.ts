@@ -14,6 +14,8 @@ namespace engines
 
 		setup()
 		{
+			super.clear();
+
 			this.autoClearCanvas = true;
 
 			Physics(
@@ -127,7 +129,7 @@ namespace engines
 			this.world.add(this.bodies);
 		}
 
-		run = (deltaTime:number, timestamp:number) =>
+		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			this.world.step(timestamp);
 

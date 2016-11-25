@@ -85,6 +85,8 @@ namespace engines
 
 		clear()
 		{
+			super.clear();
+
 			this.simulationTime = 0;
 			this.elapsedTime = 0;
 
@@ -189,7 +191,7 @@ namespace engines
 			}
 		}
 
-		run = (deltaTime:number, timestamp:number) =>
+		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(deltaTime > 0.05)
 			{
