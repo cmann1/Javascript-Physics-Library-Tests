@@ -129,6 +129,16 @@ namespace engines
 
 		protected pinBody(body:Body, pinned?:Boolean):Body
 		{
+			if(pinned)
+			{
+				var joint = Constraint.create({
+					bodyB: body,
+					// pointA: Vector.create(0,0),
+					pointA: Vector.clone(body.position),
+				});
+				World.add(this.world, joint);
+			}
+
 			return body;
 		}
 		protected createBody(x:number, y:number, shape:any, pinned?:boolean)

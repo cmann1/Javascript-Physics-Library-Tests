@@ -554,8 +554,8 @@ namespace demos
 			}
 
 			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
 				World.add(this.world, b1);
 				World.add(this.world, b2);
@@ -570,7 +570,7 @@ namespace demos
 				});
 				World.add(this.world, joint);
 
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Revolute constraint not supported', {valign: 'top'});
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Revolute constraint not supported\n(Strange behaviour)', {valign: 'top'});
 			});
 
 			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
@@ -578,8 +578,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function):void => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
 				World.add(this.world, b1);
 				World.add(this.world, b2);
@@ -612,10 +612,10 @@ namespace demos
 
 	namespace physicsJsDemo
 	{
-		// engines.PhysicsJsDemo.prototype.loadDemoConstraints = function()
-		// {
-		//
-		// };
+		engines.PhysicsJsDemo.prototype.loadDemoConstraints = function()
+		{
+
+		};
 	}
 
 }
