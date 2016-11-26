@@ -129,41 +129,7 @@ namespace engines
 			super.loadDemo(name);
 		}
 
-		loadDemoBasic()
-		{
-			const WORLD_SCALE = this.worldScale;
-
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.world.SetGravity(new b2Vec2(0, 0));
-
-			var bodyDef:b2BodyDef = new b2BodyDef();
-			var fixDef:b2FixtureDef = new b2FixtureDef();
-
-			bodyDef.type = b2Body.b2_dynamicBody;
-			fixDef.density = 1.0;
-			fixDef.friction = 0.3;
-
-			// Generate some random objects!
-			for (var i:number = 0; i < 100; i++) {
-				bodyDef.position.Set(Math.random() * this.stageWidth * WORLD_SCALE, Math.random() * this.stageHeight * WORLD_SCALE);
-
-				let body:b2Body = this.world.CreateBody(bodyDef);
-
-				// Add random one of either a Circle, Box or Pentagon.
-				if (Math.random() < 0.33) {
-					fixDef.shape = new b2CircleShape(20 * WORLD_SCALE);
-				}
-				else if (Math.random() < 0.5) {
-					fixDef.shape = b2PolygonShape.AsBox(40 * WORLD_SCALE * 0.5, 40 * WORLD_SCALE * 0.5);
-				}
-				else {
-					fixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Regular(20 * WORLD_SCALE, 20 * WORLD_SCALE, 5, 0, VertFormat.Vector, b2Vec2));
-				}
-
-				body.CreateFixture(fixDef);
-			}
-		}
+		loadDemoBasic:()=>void;
 
 		loadDemoStress()
 		{

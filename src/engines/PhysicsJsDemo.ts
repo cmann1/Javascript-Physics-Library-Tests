@@ -68,43 +68,7 @@ namespace engines
 			super.loadDemo(name);
 		}
 
-		loadDemoBasic()
-		{
-			this.gravity.setAcceleration({x: 0, y: 0});
-			var bodies = this.bodies = [];
-
-			// Generate some random objects!
-			for (var i:number = 0; i < 100; i++) {
-				var body;
-				var x = Math.random() * this.stageWidth, y = Math.random() * this.stageHeight;
-
-				// Add random one of either a Circle, Box or Pentagon.
-				if (Math.random() < 0.33) {
-					bodies.push(Physics.body('circle', {
-						x: x,
-						y: y,
-						radius: 20
-					}));
-				}
-				else if (Math.random() < 0.5) {
-					bodies.push(Physics.body('rectangle', {
-						x: x,
-						y: y,
-						width: 40,
-						height: 40
-					}));
-				}
-				else {
-					bodies.push(Physics.body('convex-polygon', {
-						x: x,
-						y: y,
-						vertices: DemoEngineBase.Regular(20, 20, 5, 0, VertFormat.Vector)
-					}));
-				}
-			}
-
-			this.world.add(this.bodies);
-		}
+		loadDemoBasic:()=>void;
 
 		loadDemoStress()
 		{

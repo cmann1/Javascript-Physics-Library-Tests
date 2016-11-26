@@ -30,13 +30,13 @@ namespace engines
 	{
 		public name:string = 'Nape';
 
-		private stage:Stage;
-		private space:Space;
-		private debug:ShapeDebug;
+		protected stage:Stage;
+		protected space:Space;
+		protected debug:ShapeDebug;
 
-		private simulationTime:number = 0;
+		protected simulationTime:number = 0;
 
-		private handJoint:PivotJoint;
+		protected handJoint:PivotJoint;
 
 		setup()
 		{
@@ -79,32 +79,7 @@ namespace engines
 			this.handJoint.stiff = false;
 		}
 
-		loadDemoBasic()
-		{
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.space.gravity.setxy(0, 0);
-
-			// Generate some random objects!
-			for (var i:number = 0; i < 100; i++) {
-				var body:Body = new Body();
-
-				// Add random one of either a Circle, Box or Pentagon.
-				if (Math.random() < 0.33) {
-					body.shapes.add(new Circle(20));
-				}
-				else if (Math.random() < 0.5) {
-					body.shapes.add(new Polygon(Polygon.box(40, 40)));
-				}
-				else {
-					body.shapes.add(new Polygon(Polygon.regular(20, 20, 5)));
-				}
-
-				// Set to random position on stage and add to Space.
-				body.position.setxy(Math.random() * this.stageWidth, Math.random() * this.stageHeight);
-				body.space = this.space;
-			}
-		}
+		loadDemoBasic:()=>void;
 
 		loadDemoStress()
 		{

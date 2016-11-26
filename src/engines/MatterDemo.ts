@@ -90,33 +90,7 @@ namespace engines
 			World.addConstraint(this.world, this.mouseConstraint.constraint);
 		}
 
-		loadDemoBasic()
-		{
-			this.engine.enableSleeping = true;
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.world.gravity.x = 0;
-			this.world.gravity.y = 0;
-
-			// Generate some random objects!
-			for (var i:number = 0; i < 100; i++) {
-				var body:Body;
-				const x = Math.random() * this.stageWidth, y = Math.random() * this.stageHeight;
-
-				// Add random one of either a Circle, Box or Pentagon.
-				if (Math.random() < 0.33) {
-					body = Bodies.circle(x, y, 20);
-				}
-				else if (Math.random() < 0.5) {
-					body = Bodies.rectangle(x, y, 40, 40);
-				}
-				else {
-					body = Bodies.polygon(x, y, 5, 20);
-				}
-
-				World.add(this.world, body);
-			}
-		}
+		loadDemoBasic:()=>void;
 
 		loadDemoStress()
 		{

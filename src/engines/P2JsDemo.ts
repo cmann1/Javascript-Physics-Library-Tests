@@ -83,34 +83,7 @@ namespace engines
 			this.world.addBody(groundBody);
 		}
 
-		loadDemoBasic()
-		{
-			const WORLD_SCALE = this.worldScale;
-
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.world.gravity = [0, 0];
-
-			// Generate some random objects!
-			for (var i:number = 0; i < 100; i++) {
-				var body:Body = new Body({ mass: 1});
-
-				// Add random one of either a Circle, Box or Pentagon.
-				if (Math.random() < 0.33) {
-					body.addShape(new Circle({radius: 20 * WORLD_SCALE}));
-				}
-				else if (Math.random() < 0.5) {
-					body.addShape(new Box(<any>{width: 40 * WORLD_SCALE, height: 40 * WORLD_SCALE}));
-				}
-				else {
-					body.addShape(new Convex(<any>{vertices: DemoEngineBase.Regular(20 * WORLD_SCALE, 20 * WORLD_SCALE, 5)}));
-				}
-
-				// Set to random position on stage and add to Space.
-				body.position = [Math.random() * this.stageWidth * WORLD_SCALE, Math.random() * this.stageHeight * WORLD_SCALE];
-				this.world.addBody(body);
-			}
-		}
+		loadDemoBasic:()=>void;
 
 		loadDemoStress()
 		{
