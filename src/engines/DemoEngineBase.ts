@@ -36,6 +36,21 @@ namespace engines
 		public mouseX:number = 0;
 		public mouseY:number = 0;
 
+		/**
+		 * The scale used when rendering to convert from world coordinates to pixels.
+		 * Do not modify directly, instead use setDrawScale()
+		 * @type {number}
+		 */
+		protected drawScale = 1;
+		/**
+		 * Used to convert from pixels to world coordinates.
+		 * It's useful when creating demos for multiple engines to specify all units in pixels multiplied by worldScale so that the same values
+		 * can be used for all engines.
+		 * Automatically calculated during setWorldScale(). Equals 1 / drawScale.
+		 * @type {number}
+		 */
+		protected worldScale = 1;
+
 		protected _enableDrawing:boolean = true;
 		protected autoClearCanvas = false;
 
@@ -111,6 +126,12 @@ namespace engines
 			{
 				overlay.render(context);
 			}
+		}
+
+		protected setDrawScale(newScale)
+		{
+			this.drawScale = newScale;
+			this.worldScale = 1 / newScale;
 		}
 
 		/*

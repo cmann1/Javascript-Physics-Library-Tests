@@ -29,9 +29,6 @@ namespace engines
 	import b2RevoluteJoint = Box2D.Dynamics.Joints.b2RevoluteJoint;
 	import b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef;
 
-	const DRAW_SCALE = 30;
-	const SCALE = 1 / DRAW_SCALE;
-
 	export class Box2dWebDemo extends DemoEngineBase
 	{
 
@@ -48,16 +45,19 @@ namespace engines
 		setup()
 		{
 			this.autoClearCanvas = true;
-
 			this.world = new b2World(new b2Vec2(), true);
+			this.setDrawScale(30);
+
+			const DRAW_SCALE = this.drawScale;
+			const WORLD_SCALE = this.worldScale;
 
 			// Borders
 			{
-				const w = this.stageWidth * SCALE;
-				const h = this.stageHeight * SCALE;
+				const w = this.stageWidth * WORLD_SCALE;
+				const h = this.stageHeight * WORLD_SCALE;
 				const hw = w / 2;
 				const hh = h / 2;
-				const t = 200 * SCALE;
+				const t = 200 * WORLD_SCALE;
 				const ht = t / 2;
 
 				let borderBodyDef:b2BodyDef = new b2BodyDef();
@@ -131,6 +131,8 @@ namespace engines
 
 		loadDemoBasic()
 		{
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 10;
 			this.positionIterations = 10;
 			this.world.SetGravity(new b2Vec2(0, 0));
@@ -144,19 +146,19 @@ namespace engines
 
 			// Generate some random objects!
 			for (var i:number = 0; i < 100; i++) {
-				bodyDef.position.Set(Math.random() * this.stageWidth * SCALE, Math.random() * this.stageHeight * SCALE);
+				bodyDef.position.Set(Math.random() * this.stageWidth * WORLD_SCALE, Math.random() * this.stageHeight * WORLD_SCALE);
 
 				let body:b2Body = this.world.CreateBody(bodyDef);
 
 				// Add random one of either a Circle, Box or Pentagon.
 				if (Math.random() < 0.33) {
-					fixDef.shape = new b2CircleShape(20 * SCALE);
+					fixDef.shape = new b2CircleShape(20 * WORLD_SCALE);
 				}
 				else if (Math.random() < 0.5) {
-					fixDef.shape = b2PolygonShape.AsBox(40 * SCALE * 0.5, 40 * SCALE * 0.5);
+					fixDef.shape = b2PolygonShape.AsBox(40 * WORLD_SCALE * 0.5, 40 * WORLD_SCALE * 0.5);
 				}
 				else {
-					fixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Regular(20 * SCALE, 20 * SCALE, 5, 0, VertFormat.Vector, b2Vec2));
+					fixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Regular(20 * WORLD_SCALE, 20 * WORLD_SCALE, 5, 0, VertFormat.Vector, b2Vec2));
 				}
 
 				body.CreateFixture(fixDef);
@@ -165,6 +167,8 @@ namespace engines
 
 		loadDemoStress()
 		{
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 35;
 			this.positionIterations = 15;
 			this.world.SetGravity(new b2Vec2(0, 9.82));
@@ -173,8 +177,8 @@ namespace engines
 			const sh = this.stageHeight;
 			const boxWidth:number = 10;
 			const boxHeight:number = 14;
-			const bw:number = boxWidth * SCALE * 0.5;
-			const bh:number = boxHeight * SCALE * 0.5;
+			const bw:number = boxWidth * WORLD_SCALE * 0.5;
+			const bh:number = boxHeight * WORLD_SCALE * 0.5;
 			var pyramidHeight:number = 40; //820 blocks
 
 			var bodyDef:b2BodyDef = new b2BodyDef();
@@ -190,8 +194,8 @@ namespace engines
 					// all contact points will be created in very first step before the blocks
 					// begin to fall.
 					bodyDef.position.Set(
-						((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * SCALE,
-						(sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * SCALE
+						((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * WORLD_SCALE,
+						(sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * WORLD_SCALE
 					);
 
 					let body:b2Body = this.world.CreateBody(bodyDef);
@@ -203,6 +207,9 @@ namespace engines
 
 		loadDemoConstraints()
 		{
+			const DRAW_SCALE = this.drawScale;
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 10;
 			this.positionIterations = 10;
 			this.world.SetGravity(new b2Vec2(0, 9.82));
@@ -219,7 +226,7 @@ namespace engines
 			const cellHcnt:number = 3;
 			const cellWidth:number = w / cellWcnt;
 			const cellHeight:number = h / cellHcnt;
-			const size:number = 22 * SCALE;
+			const size:number = 22 * WORLD_SCALE;
 
 			var bodyDef:b2BodyDef = new b2BodyDef();
 			var fixDef:b2FixtureDef = new b2FixtureDef();
@@ -240,8 +247,8 @@ namespace engines
 				);
 
 				f(
-					(x:number):number => { return (x + (i * cellWidth)) * SCALE; },
-					(y:number):number => { return (y + (j * cellHeight)) * SCALE; }
+					(x:number):number => { return (x + (i * cellWidth)) * WORLD_SCALE; },
+					(y:number):number => { return (y + (j * cellHeight)) * WORLD_SCALE; }
 				);
 			};
 			// Box utility.
@@ -279,11 +286,11 @@ namespace engines
 			var regionFixDef:b2FixtureDef = new b2FixtureDef();
 			var i:number;
 			for (i = 1; i < cellWcnt; i++) {
-				regionFixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Box((i*cellWidth-0.5) * SCALE, h / 2 * SCALE, 1 * SCALE, h * SCALE, VertFormat.Vector, b2Vec2));
+				regionFixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Box((i*cellWidth-0.5) * WORLD_SCALE, h / 2 * WORLD_SCALE, 1 * WORLD_SCALE, h * WORLD_SCALE, VertFormat.Vector, b2Vec2));
 				regionBody.CreateFixture(regionFixDef);
 			}
 			for (i = 1; i < cellHcnt; i++) {
-				regionFixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Box(w / 2 * SCALE, (i*cellHeight-0.5) * SCALE, w * SCALE, 1 * SCALE, VertFormat.Vector, b2Vec2));
+				regionFixDef.shape = b2PolygonShape.AsVector(DemoEngineBase.Box(w / 2 * WORLD_SCALE, (i*cellHeight-0.5) * WORLD_SCALE, w * WORLD_SCALE, 1 * WORLD_SCALE, VertFormat.Vector, b2Vec2));
 				regionBody.CreateFixture(regionFixDef);
 			}
 
@@ -323,7 +330,7 @@ namespace engines
 				var a2:b2Vec2 = b2.GetWorldCenter().Copy();
 				a2.Add(new b2Vec2(0, -size));
 				jointDef.Initialize(b1, b2, a1, a2);
-				jointDef.length = cellWidth/3*0.75 * SCALE;
+				jointDef.length = cellWidth/3*0.75 * WORLD_SCALE;
 				// 	/*jointMin*/ cellWidth/3*0.75 * SCALE,
 				// 	/*jointMax*/ cellWidth/3*1.25 * SCALE
 				this.world.CreateJoint(jointDef);
@@ -390,8 +397,8 @@ namespace engines
 
 				var jointDef:b2PrismaticJointDef = new b2PrismaticJointDef();
 				jointDef.Initialize(b1, b2, b2.GetWorldCenter(), new b2Vec2(0,1));
-				jointDef.lowerTranslation = -25.0 * SCALE;
-				jointDef.upperTranslation = 75.0 * SCALE;
+				jointDef.lowerTranslation = -25.0 * WORLD_SCALE;
+				jointDef.upperTranslation = 75.0 * WORLD_SCALE;
 				jointDef.enableLimit = true;
 
 				this.world.CreateJoint(jointDef);
@@ -468,8 +475,8 @@ namespace engines
 
 		getBodyAtMouse(includeStatic = false)
 		{
-			const mouseX = this.mouseX * SCALE;
-			const mouseY = this.mouseY * SCALE;
+			const mouseX = this.mouseX * this.worldScale;
+			const mouseY = this.mouseY * this.worldScale;
 			var mouse_p = new b2Vec2(mouseX, mouseY);
 
 			var aabb = new b2AABB();
@@ -503,7 +510,7 @@ namespace engines
 
 		getWorldMouse():b2Vec2
 		{
-			return new b2Vec2(this.mouseX * SCALE, this.mouseY * SCALE);
+			return new b2Vec2(this.mouseX * this.worldScale, this.mouseY * this.worldScale);
 		}
 
 	}

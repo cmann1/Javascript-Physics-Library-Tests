@@ -21,26 +21,26 @@ namespace engines
 	import PrismaticConstraint = p2.PrismaticConstraint;
 	import GearConstraint = p2.GearConstraint;
 
-	const SCALE = 0.01;
-	const DRAW_SCALE = 1 / SCALE;
-	const DRAW_SCALE_VEC2 = [DRAW_SCALE, DRAW_SCALE];
-
 	export class P2JsDemo extends DemoEngineBase
 	{
 
 		public name:string = 'P2Js';
 
-		readonly maxSubSteps = 10;
-		readonly pickPrecision = 5;
+		protected drawScaleVec2;
 
-		world:World;
-		nullBody:Body;
-		context:CanvasRenderingContext2D;
+		protected readonly maxSubSteps = 10;
+		protected readonly pickPrecision = 5;
 
-		handJoint:RevoluteConstraint;
+		protected world:World;
+		protected nullBody:Body;
+		protected context:CanvasRenderingContext2D;
+
+		protected handJoint:RevoluteConstraint;
 
 		setup()
 		{
+			this.drawScaleVec2 = [1, 1];
+			this.setDrawScale(100);
 			this.world = new World();
 
 			if(!this.nullBody)
@@ -60,17 +60,19 @@ namespace engines
 
 		loadDemo(name:string)
 		{
+			const WORLD_SCALE = this.worldScale;
+
 			super.loadDemo(name);
 
 			this.world.sleepMode = World.ISLAND_SLEEPING;
 			this.world.islandSplit = true;
 			this.world.addBody(this.nullBody);
 
-			const w = this.stageWidth * SCALE;
-			const h = this.stageHeight * SCALE;
+			const w = this.stageWidth * WORLD_SCALE;
+			const h = this.stageHeight * WORLD_SCALE;
 			const hw = w / 2;
 			const hh = h / 2;
-			const t = 200 * SCALE;
+			const t = 200 * WORLD_SCALE;
 			const ht = t / 2;
 
 			var groundBody = new Body({ mass: 0}); // Setting mass to 0 makes it static
@@ -83,6 +85,8 @@ namespace engines
 
 		loadDemoBasic()
 		{
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 10;
 			this.positionIterations = 10;
 			this.world.gravity = [0, 0];
@@ -93,33 +97,35 @@ namespace engines
 
 				// Add random one of either a Circle, Box or Pentagon.
 				if (Math.random() < 0.33) {
-					body.addShape(new Circle({radius: 20 * SCALE}));
+					body.addShape(new Circle({radius: 20 * WORLD_SCALE}));
 				}
 				else if (Math.random() < 0.5) {
-					body.addShape(new Box(<any>{width: 40 * SCALE, height: 40 * SCALE}));
+					body.addShape(new Box(<any>{width: 40 * WORLD_SCALE, height: 40 * WORLD_SCALE}));
 				}
 				else {
-					body.addShape(new Convex(<any>{vertices: DemoEngineBase.Regular(20 * SCALE, 20 * SCALE, 5)}));
+					body.addShape(new Convex(<any>{vertices: DemoEngineBase.Regular(20 * WORLD_SCALE, 20 * WORLD_SCALE, 5)}));
 				}
 
 				// Set to random position on stage and add to Space.
-				body.position = [Math.random() * this.stageWidth * SCALE, Math.random() * this.stageHeight * SCALE];
+				body.position = [Math.random() * this.stageWidth * WORLD_SCALE, Math.random() * this.stageHeight * WORLD_SCALE];
 				this.world.addBody(body);
 			}
 		}
 
 		loadDemoStress()
 		{
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 35;
 			this.positionIterations = 15;
-			this.world.gravity = [0, 100 * SCALE];
+			this.world.gravity = [0, 100 * WORLD_SCALE];
 
 			const sw = this.stageWidth;
 			const sh = this.stageHeight;
 			const boxWidth:number = 10;
 			const boxHeight:number = 14;
-			const bw:number = boxWidth * SCALE;
-			const bh:number = boxHeight * SCALE;
+			const bw:number = boxWidth * WORLD_SCALE;
+			const bh:number = boxHeight * WORLD_SCALE;
 			var pyramidHeight:number = 40; //820 blocks
 
 			for (var y:number = 1; y <= pyramidHeight; y++) {
@@ -128,8 +134,8 @@ namespace engines
 					// We initialise the blocks to be slightly overlapping so that
 					// all contact points will be created in very first step before the blocks
 					// begin to fall.
-					block.position[0] = ((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * SCALE;
-					block.position[1] = (sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * SCALE;
+					block.position[0] = ((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * WORLD_SCALE;
+					block.position[1] = (sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * WORLD_SCALE;
 					block.addShape(new Box(<any>{width: bw, height: bh}));
 					this.world.addBody(block);
 				}}
@@ -137,9 +143,12 @@ namespace engines
 
 		loadDemoConstraints()
 		{
+			const DRAW_SCALE = this.drawScale;
+			const WORLD_SCALE = this.worldScale;
+
 			this.velocityIterations = 10;
 			this.positionIterations = 10;
-			this.world.gravity = [0, 600 * SCALE];
+			this.world.gravity = [0, 600 * WORLD_SCALE];
 
 			const w:number = this.stageWidth;
 			const h:number = this.stageHeight;
@@ -153,7 +162,7 @@ namespace engines
 			const cellHcnt:number = 3;
 			const cellWidth:number = w / cellWcnt;
 			const cellHeight:number = h / cellHcnt;
-			const size:number = 22 * SCALE;
+			const size:number = 22 * WORLD_SCALE;
 
 			// Add a "null" body
 			var groundBody = new Body();
@@ -171,8 +180,8 @@ namespace engines
 				);
 
 				f(
-					(x:number):number => { return (x + (i * cellWidth)) * SCALE; },
-					(y:number):number => { return (y + (j * cellHeight)) * SCALE; }
+					(x:number):number => { return (x + (i * cellWidth)) * WORLD_SCALE; },
+					(y:number):number => { return (y + (j * cellHeight)) * WORLD_SCALE; }
 				);
 			};
 			// Box utility.
@@ -211,14 +220,14 @@ namespace engines
 			var i:number;
 			for (i = 1; i < cellWcnt; i++) {
 				let body:Body = new Body();
-				body.position = [(i*cellWidth-0.5) * SCALE, h / 2 * SCALE];
-				body.addShape(new Box(<any>{width: 1 * SCALE, height: h * SCALE}));
+				body.position = [(i*cellWidth-0.5) * WORLD_SCALE, h / 2 * WORLD_SCALE];
+				body.addShape(new Box(<any>{width: 1 * WORLD_SCALE, height: h * WORLD_SCALE}));
 				this.world.addBody(body);
 			}
 			for (i = 1; i < cellHcnt; i++) {
 				let body:Body = new Body();
-				body.position = [w / 2 * SCALE, (i*cellHeight-0.5) * SCALE];
-				body.addShape(new Box(<any>{width: w * SCALE, height: 1 * SCALE}));
+				body.position = [w / 2 * WORLD_SCALE, (i*cellHeight-0.5) * WORLD_SCALE];
+				body.addShape(new Box(<any>{width: w * WORLD_SCALE, height: 1 * WORLD_SCALE}));
 				this.world.addBody(body);
 			}
 
@@ -249,14 +258,14 @@ namespace engines
 				var b2:Body = box(x(1.75*cellWidth/3),y(cellHeight/2),size);
 
 				var joint = new DistanceConstraint(b1, b2, {
-					distance: cellWidth/3*0.75 * SCALE,
+					distance: cellWidth/3*0.75 * WORLD_SCALE,
 					localAnchorA: [0, -size],
 					localAnchorB: [0, -size]
 				});
 				joint.lowerLimitEnabled = true;
 				joint.upperLimitEnabled = true;
-				joint.lowerLimit = cellWidth/3*0.75 * SCALE;
-				joint.upperLimit = cellWidth/3*1.25 * SCALE;
+				joint.lowerLimit = cellWidth/3*0.75 * WORLD_SCALE;
+				joint.upperLimit = cellWidth/3*1.25 * WORLD_SCALE;
 				this.world.addConstraint(joint);
 			});
 
@@ -314,8 +323,8 @@ namespace engines
 					localAxisA: [0, 1],
 					localAnchorA: localA,
 					localAnchorB: [0, 0],
-					lowerLimit: -25.0 * SCALE,
-					upperLimit: 75.0 * SCALE,
+					lowerLimit: -25.0 * WORLD_SCALE,
+					upperLimit: 75.0 * WORLD_SCALE,
 				});
 				this.world.addConstraint(joint);
 			});
@@ -325,8 +334,8 @@ namespace engines
 		{
 			if(this.handJoint)
 			{
-				this.handJoint.pivotA[0] = this.mouseX * SCALE;
-				this.handJoint.pivotA[1] = this.mouseY * SCALE;
+				this.handJoint.pivotA[0] = this.mouseX * this.worldScale;
+				this.handJoint.pivotA[1] = this.mouseY * this.worldScale;
 				this.handJoint.bodyA.wakeUp();
 				this.handJoint.bodyB.wakeUp();
 			}
@@ -338,6 +347,16 @@ namespace engines
 				this.render();
 			}
 		};
+
+		protected setDrawScale(newScale)
+		{
+			super.setDrawScale(newScale);
+			this.drawScaleVec2[0] = this.drawScaleVec2[1] = newScale;
+		}
+
+		/*
+		 *** Rendering Methods
+		 */
 
 		protected render()
 		{
@@ -351,6 +370,8 @@ namespace engines
 		//noinspection JSMethodCanBeStatic
 		protected renderBodies(world:World, context:CanvasRenderingContext2D)
 		{
+			const DRAW_SCALE = this.drawScale;
+
 			const bodies = world.bodies;
 
 			for(let body of bodies)
@@ -437,8 +458,8 @@ namespace engines
 			var pivotB = [];
 			joint.bodyA.toWorldFrame(pivotA, joint.pivotA);
 			joint.bodyB.toWorldFrame(pivotB, joint.pivotB);
-			vec2.multiply(pivotA, pivotA, DRAW_SCALE_VEC2);
-			vec2.multiply(pivotB, pivotB, DRAW_SCALE_VEC2);
+			vec2.multiply(pivotA, pivotA, this.drawScaleVec2);
+			vec2.multiply(pivotB, pivotB, this.drawScaleVec2);
 
 			context.beginPath();
 			context.moveTo(pivotA[0], pivotA[1]);
@@ -458,8 +479,8 @@ namespace engines
 		{
 			var pivotA = [];
 			var pivotB = [];
-			vec2.multiply(pivotA, joint.bodyA.position, DRAW_SCALE_VEC2);
-			vec2.multiply(pivotB, joint.bodyB.position, DRAW_SCALE_VEC2);
+			vec2.multiply(pivotA, joint.bodyA.position, this.drawScaleVec2);
+			vec2.multiply(pivotB, joint.bodyB.position, this.drawScaleVec2);
 
 			context.beginPath();
 			context.moveTo(pivotA[0], pivotA[1]);
@@ -480,8 +501,8 @@ namespace engines
 			var pivotB = [];
 			joint.bodyA.toWorldFrame(pivotA, joint.localAnchorA);
 			joint.bodyB.toWorldFrame(pivotB, joint.localAnchorB);
-			vec2.multiply(pivotA, pivotA, DRAW_SCALE_VEC2);
-			vec2.multiply(pivotB, pivotB, DRAW_SCALE_VEC2);
+			vec2.multiply(pivotA, pivotA, this.drawScaleVec2);
+			vec2.multiply(pivotB, pivotB, this.drawScaleVec2);
 
 			var x1 = pivotA[0];
 			var y1 = pivotA[1];
@@ -495,8 +516,8 @@ namespace engines
 			var ndx = dx / length;
 			var ndy = dy / length;
 
-			var minLength = joint.lowerLimitEnabled ? joint.lowerLimit * DRAW_SCALE : 0;
-			var maxLength = joint.upperLimitEnabled ? joint.upperLimit * DRAW_SCALE : length;
+			var minLength = joint.lowerLimitEnabled ? joint.lowerLimit * this.drawScale : 0;
+			var maxLength = joint.upperLimitEnabled ? joint.upperLimit * this.drawScale : length;
 
 			var lx1 = mx - ndx * minLength * 0.5;
 			var ly1 = my - ndy * minLength * 0.5;
@@ -544,8 +565,8 @@ namespace engines
 			joint.bodyA.toWorldFrame(pivotA, joint.localAnchorA);
 			joint.bodyB.toWorldFrame(pivotB, joint.localAnchorB);
 			vec2.rotate(localAxis, joint.localAxisA, joint.bodyA.angle);
-			vec2.multiply(pivotA, pivotA, DRAW_SCALE_VEC2);
-			vec2.multiply(pivotB, pivotB, DRAW_SCALE_VEC2);
+			vec2.multiply(pivotA, pivotA, this.drawScaleVec2);
+			vec2.multiply(pivotB, pivotB, this.drawScaleVec2);
 			vec2.normalize(localAxis, localAxis);
 
 			var x1 = pivotA[0];
@@ -558,8 +579,8 @@ namespace engines
 			var ndx = dx / length;
 			var ndy = dy / length;
 
-			var minLength = joint.lowerLimitEnabled ? joint.lowerLimit * DRAW_SCALE : 0;
-			var maxLength = joint.upperLimitEnabled ? joint.upperLimit * DRAW_SCALE : length;
+			var minLength = joint.lowerLimitEnabled ? joint.lowerLimit * this.drawScale : 0;
+			var maxLength = joint.upperLimitEnabled ? joint.upperLimit * this.drawScale : length;
 
 			var lx = x1 + ndx * minLength;
 			var ly = y1 + ndy * minLength;
@@ -600,7 +621,7 @@ namespace engines
 
 		onMouseDown = (event) =>
 		{
-			const p = [this.mouseX * SCALE, this.mouseY * SCALE];
+			const p = [this.mouseX * this.worldScale, this.mouseY * this.worldScale];
 			var result = this.world.hitTest(p, this.world.bodies, this.pickPrecision);
 
 			let pickedBody;
