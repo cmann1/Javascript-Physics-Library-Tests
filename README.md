@@ -1,6 +1,7 @@
 # Javascript Physics Library Tests
 
-A small application used to test, compare and benchmark various physics libraries for Javascript.
+A small application used to test, compare and benchmark various physics libraries for Javascript.  
+View it online here: https://cmann1.github.io/Javascript-Physics-Library-Tests/
 
 So far there are three different demos for each library;
 I've tried to keep the demos as similar as possible across engines to allow them to be easily compared.
