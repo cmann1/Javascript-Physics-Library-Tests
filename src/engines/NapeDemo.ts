@@ -80,201 +80,8 @@ namespace engines
 		}
 
 		loadDemoBasic:() => void;
+		loadDemoConstraints:() => void;
 		loadDemoStress:() => void;
-
-		loadDemoConstraints()
-		{
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.space.gravity.setxy(0, 600);
-
-			const w:number = this.stageWidth;
-			const h:number = this.stageHeight;
-
-			// Constraint settings.
-			const frequency:number = 20.0;
-			const damping:number = 1.0;
-
-			// Cell sizes
-			const cellWcnt:number = 3;
-			const cellHcnt:number = 3;
-			const cellWidth:number = w / cellWcnt;
-			const cellHeight:number = h / cellHcnt;
-			const size:number = 22;
-
-			// Environment for each cell.
-			var withCell = (i:number, j:number, title:string, f:Function) =>
-			{
-				this.overlays.push(
-					new Overlay(
-						i * cellWidth + cellWidth * 0.5, j * cellHeight + 5,
-						title, null,
-						{valign: 'top'}
-					)
-				);
-
-				f(
-					(x:number):number => { return x + (i * cellWidth); },
-					(y:number):number => { return y + (j * cellHeight); }
-				);
-			};
-			// Box utility.
-			var box = (x:number, y:number, radius:number, pinned:boolean=false):Body =>
-			{
-				var body:Body = new Body();
-				body.position.setxy(x, y);
-				body.shapes.add(new Polygon(Polygon.box(radius*2, radius*2)));
-				body.space = this.space;
-				if (pinned) {
-					var pin:PivotJoint = new PivotJoint(
-						this.space.world, body,
-						body.position,
-						Vec2.weak(0,0)
-					);
-					pin.space = this.space;
-				}
-				return body;
-			};
-
-			// Create regions for each constraint demo
-			var regions:Body = new Body(BodyType.STATIC);
-			var i:number;
-			for (i = 1; i < cellWcnt; i++) {
-				regions.shapes.add(new Polygon(Polygon.rect(i*cellWidth-0.5,0,1,h)));
-			}
-			for (i = 1; i < cellHcnt; i++) {
-				regions.shapes.add(new Polygon(Polygon.rect(0,i*cellHeight-0.5,w,1)));
-			}
-			regions.space = this.space;
-
-			// Common formatting of constraints.
-			var format = (c:Constraint) => {
-				c.stiff = false;
-				c.frequency = frequency;
-				c.damping = damping;
-				c.space = this.space;
-			};
-
-			withCell(1, 0, "PivotJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var pivotPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
-				format(new PivotJoint(
-					b1, b2,
-					b1.worldPointToLocal(pivotPoint, true),
-					b2.worldPointToLocal(pivotPoint, true)
-				));
-				pivotPoint.dispose();
-			});
-
-			withCell(2, 0, "WeldJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var weldPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
-				format(new WeldJoint(
-					b1, b2,
-					b1.worldPointToLocal(weldPoint, true),
-					b2.worldPointToLocal(weldPoint, true),
-					/*phase*/ Math.PI/4 /*45 degrees*/
-				));
-				weldPoint.dispose();
-			});
-
-			withCell(0, 1, "DistanceJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1.25*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(1.75*cellWidth/3),y(cellHeight/2),size);
-
-				format(new DistanceJoint(
-					b1, b2,
-					Vec2.weak(0, -size),
-					Vec2.weak(0, -size),
-					/*jointMin*/ cellWidth/3*0.75,
-					/*jointMax*/ cellWidth/3*1.25
-				));
-			});
-
-			withCell(1, 1, "LineJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var anchorPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
-				format(new LineJoint(
-					b1, b2,
-					b1.worldPointToLocal(anchorPoint, true),
-					b2.worldPointToLocal(anchorPoint, true),
-					/*direction*/ Vec2.weak(0, 1),
-					/*jointMin*/ -size,
-					/*jointMax*/ size
-				));
-				anchorPoint.dispose();
-			});
-
-			withCell(2, 1, "PulleyJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(cellWidth/2),y(size),size/2, true);
-				b1.scaleShapes(4, 1);
-
-				var b2:Body = box(x(1*cellWidth/3),y(cellHeight/2),size/2);
-				var b3:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				format(new PulleyJoint(
-					b1, b2,
-					b1, b3,
-					Vec2.weak(-size*2, 0), Vec2.weak(0, -size/2),
-					Vec2.weak( size*2, 0), Vec2.weak(0, -size),
-					/*jointMin*/ cellHeight*0.75,
-					/*jointMax*/ cellHeight*0.75,
-					/*ratio*/ 2.5
-				));
-			});
-
-			withCell(0, 2, "AngleJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size, true);
-
-				format(new AngleJoint(
-					b1, b2,
-					/*jointMin*/ -Math.PI*1.5,
-					/*jointMax*/ Math.PI*1.5,
-					/*ratio*/ 2
-				));
-			});
-
-			withCell(1, 2, "MotorJoint", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size, true);
-
-				format(new MotorJoint(
-					b1, b2,
-					/*rate*/ 10,
-					/*ratio*/ 3
-				));
-			});
-
-			withCell(2, 2, "PrismaticJoint\n(LineJoint + AngleJoint)", function (x:Function, y:Function):void {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var anchorPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
-				format(new LineJoint(
-					b1, b2,
-					b1.worldPointToLocal(anchorPoint, true),
-					b2.worldPointToLocal(anchorPoint, true),
-					/*direction*/ Vec2.weak(0, 1),
-					/*jointMin*/ -25,
-					/*jointMax*/ 75
-				));
-				anchorPoint.dispose();
-
-				format(new AngleJoint(
-					b1, b2,
-					/*jointMin*/ 0,
-					/*jointMax*/ 0,
-					/*ratio*/ 1
-				));
-			});
-		}
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
@@ -305,6 +112,35 @@ namespace engines
 				this.stage.update();
 			}
 		};
+
+		/*
+		 *** Utility Methods
+		 */
+
+		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		{
+			var body:Body = new Body();
+			body.position.setxy(x, y);
+			body.shapes.add(shape);
+			body.space = this.space;
+			if (pinned) {
+				var pin:PivotJoint = new PivotJoint(
+					this.space.world, body,
+					body.position,
+					Vec2.weak(0,0)
+				);
+				pin.space = this.space;
+			}
+			return body;
+		}
+		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
+		{
+			return this.createBody(x, y, new Polygon(Polygon.box(radius*2, radius*2)), pinned);
+		}
+		protected createCircle(x:number, y:number, radius:number, pinned?:boolean):Body
+		{
+			return this.createBody(x, y, new Circle(radius), pinned);
+		}
 
 		/*
 		 *** Events

@@ -193,23 +193,18 @@ namespace engines
 			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning, options));
 		}
 
-		/*
-		 *** Events
+		/**
+		 * Utility to create a (optionally) pinned body with the given shape
 		 */
-
-		protected onDisableDrawing() { }
-
-		protected onPositionIterationsUpdate(iterations:number) { }
-
-		protected onVelocityIterationsUpdate(iterations:number) { }
-
-		onMouseDown = (event) => { };
-
-		onMouseUp = (event) => { };
-
-		/*
-		 *** Utility Methods
+		protected abstract createBody<T>(x:number, y:number, shape:any, pinned?:boolean):T;
+		/**
+		 * Box utility.
 		 */
+		protected abstract createBox<T>(x:number, y:number, radius:number, pinned?:boolean):T;
+		/**
+		 * Circle utility.
+		 */
+		protected abstract createCircle<T>(x:number, y:number, radius:number, pinned?:boolean):T;
 
 		static Box(x, y, w, h, format:VertFormat = VertFormat.Array, VertexClass:IVertex = null):Array<Array<number>|{x:number, y:number}|any>
 		{
@@ -259,11 +254,25 @@ namespace engines
 			return vertices;
 		}
 
-		static circle(context:CanvasRenderingContext2D, x, y, radius)
+		static drawCircle(context:CanvasRenderingContext2D, x, y, radius)
 		{
 			context.moveTo(x, y);
 			context.arc(x, y, radius, 0, 2 * Math.PI, false);
 		}
+
+		/*
+		 *** Events
+		 */
+
+		protected onDisableDrawing() { }
+
+		protected onPositionIterationsUpdate(iterations:number) { }
+
+		protected onVelocityIterationsUpdate(iterations:number) { }
+
+		onMouseDown = (event) => { };
+
+		onMouseUp = (event) => { };
 
 	}
 

@@ -85,195 +85,7 @@ namespace engines
 
 		loadDemoBasic:() => void;
 		loadDemoStress:() => void;
-
-		loadDemoConstraints()
-		{
-			const DRAW_SCALE = this.drawScale;
-			const WORLD_SCALE = this.worldScale;
-
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
-			this.world.gravity = [0, 600 * WORLD_SCALE];
-
-			const w:number = this.stageWidth;
-			const h:number = this.stageHeight;
-
-			// Constraint settings.
-			const frequency:number = 20.0;
-			const damping:number = 1.0;
-
-			// Cell sizes
-			const cellWcnt:number = 3;
-			const cellHcnt:number = 3;
-			const cellWidth:number = w / cellWcnt;
-			const cellHeight:number = h / cellHcnt;
-			const size:number = 22 * WORLD_SCALE;
-
-			// Add a "null" body
-			var groundBody = new Body();
-			this.world.addBody(groundBody);
-
-			// Environment for each cell.
-			var withCell = (i:number, j:number, title:string, f:Function) =>
-			{
-				this.overlays.push(
-					new Overlay(
-						i * cellWidth + cellWidth * 0.5, j * cellHeight + 5,
-						title, null,
-						{valign: 'top'}
-					)
-				);
-
-				f(
-					(x:number):number => { return (x + (i * cellWidth)) * WORLD_SCALE; },
-					(y:number):number => { return (y + (j * cellHeight)) * WORLD_SCALE; }
-				);
-			};
-			// Box utility.
-			var box = (x:number, y:number, radius:number, pinned:boolean=false):Body =>
-			{
-				var body:Body = new Body({ mass: 1});
-				body.position = [x, y];
-				body.addShape(new Box(<any>{width: radius*2, height: radius*2}));
-				this.world.addBody(body);
-				if (pinned) {
-					var pin:RevoluteConstraint = new RevoluteConstraint(body, groundBody, {
-						worldPivot: body.position
-					});
-					this.world.addConstraint(pin);
-					(<any>body)._pin = pin;
-				}
-				return body;
-			};
-			// Circle utility.
-			var circle = (x:number, y:number, radius:number, pinned:boolean=false):Body =>
-			{
-				var body:Body = new Body({ mass: 1});
-				body.position = [x, y];
-				body.addShape(new Circle({radius: radius}));
-				this.world.addBody(body);
-				if (pinned) {
-					var pin:RevoluteConstraint = new RevoluteConstraint(body, groundBody, {
-						worldPivot: body.position
-					});
-					this.world.addConstraint(pin);
-				}
-				return body;
-			};
-
-			// Create regions for each constraint demo
-			var i:number;
-			for (i = 1; i < cellWcnt; i++) {
-				let body:Body = new Body();
-				body.position = [(i*cellWidth-0.5) * WORLD_SCALE, h / 2 * WORLD_SCALE];
-				body.addShape(new Box(<any>{width: 1 * WORLD_SCALE, height: h * WORLD_SCALE}));
-				this.world.addBody(body);
-			}
-			for (i = 1; i < cellHcnt; i++) {
-				let body:Body = new Body();
-				body.position = [w / 2 * WORLD_SCALE, (i*cellHeight-0.5) * WORLD_SCALE];
-				body.addShape(new Box(<any>{width: w * WORLD_SCALE, height: 1 * WORLD_SCALE}));
-				this.world.addBody(body);
-			}
-
-			withCell(1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var pivotPoint = [x(cellWidth/2),y(cellHeight/2)];
-				var joint:RevoluteConstraint = new RevoluteConstraint(b1, b2, {worldPivot: pivotPoint});
-				this.world.addConstraint(joint);
-			});
-
-			withCell(2, 0, "LockJoint", (x:Function, y:Function):void => {
-				const a = Math.PI/4;
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				b1.angle = a * 1.5;
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-				b2.angle = -Math.PI + a * 0.5;
-
-				var weldPoint = [x(cellWidth/2),y(cellHeight/2)];
-				b2.toLocalFrame(weldPoint, weldPoint);
-				var joint:LockConstraint = new LockConstraint(b1, b2);
-				this.world.addConstraint(joint);
-			});
-
-			withCell(0, 1, "DistanceJoint", (x:Function, y:Function):void => {
-				var b1:Body = box(x(1.25*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(1.75*cellWidth/3),y(cellHeight/2),size);
-
-				var joint = new DistanceConstraint(b1, b2, {
-					distance: cellWidth/3*0.75 * WORLD_SCALE,
-					localAnchorA: [0, -size],
-					localAnchorB: [0, -size]
-				});
-				joint.lowerLimitEnabled = true;
-				joint.upperLimitEnabled = true;
-				joint.lowerLimit = cellWidth/3*0.75 * WORLD_SCALE;
-				joint.upperLimit = cellWidth/3*1.25 * WORLD_SCALE;
-				this.world.addConstraint(joint);
-			});
-
-			withCell(1, 1, "LineJoint\n(PrismaticJoint/disableRotationalLock)", (x:Function, y:Function):void => {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var anchorPoint = [x(cellWidth/2),y(cellHeight/2)];
-				var localA = [];
-				var localB = [];
-				b1.toLocalFrame(localA, anchorPoint);
-				b2.toLocalFrame(localB, anchorPoint);
-				var joint = new PrismaticConstraint(b1, b2, {
-					localAxisA: [0, 1],
-					disableRotationalLock: true,
-					localAnchorA: localA,
-					localAnchorB: localB,
-					lowerLimit: -size,
-					upperLimit: size,
-				});
-				this.world.addConstraint(joint);
-			});
-
-			withCell(2, 1, "PulleyJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Pulley constraint not supported', {valign: 'top'});
-			});
-
-			withCell(0, 2, "GearJoint", (x:Function, y:Function):void => {
-				var b1:Body = circle(x(cellWidth/2)-size,y(cellHeight/2),size, true);
-				var b2:Body = circle(x(cellWidth/2)+size*2,y(cellHeight/2),size * 2, true);
-
-				var joint = new GearConstraint(b2, b1, {
-					ratio: 2
-				});
-				this.world.addConstraint(joint);
-
-			});
-
-			withCell(1, 2, "RevoluteJoint Motor", (x:Function, y:Function):void => {
-				var b1:Body = box(x(cellWidth/2),y(cellHeight/2),size, true);
-
-				var joint:RevoluteConstraint = (<any>b1)._pin;
-				joint.enableMotor();
-				joint.setMotorSpeed(1.5);
-			});
-
-			withCell(2, 2, "PrismaticJoint", (x:Function, y:Function):void => {
-				var b1:Body = box(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = box(x(2*cellWidth/3),y(cellHeight/2),size);
-
-				var anchorPoint = [x(cellWidth/2),y(cellHeight/2)];
-				var localA = [];
-				b1.toLocalFrame(localA, b2.position);
-				var joint = new PrismaticConstraint(b1, b2, {
-					localAxisA: [0, 1],
-					localAnchorA: localA,
-					localAnchorB: [0, 0],
-					lowerLimit: -25.0 * WORLD_SCALE,
-					upperLimit: 75.0 * WORLD_SCALE,
-				});
-				this.world.addConstraint(joint);
-			});
-		}
+		loadDemoConstraints:() => void;
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
@@ -413,8 +225,8 @@ namespace engines
 			context.stroke();
 
 			context.beginPath();
-			DemoEngineBase.circle(context, pivotA[0], pivotA[1], 2);
-			DemoEngineBase.circle(context, pivotB[0], pivotB[1], 2);
+			DemoEngineBase.drawCircle(context, pivotA[0], pivotA[1], 2);
+			DemoEngineBase.drawCircle(context, pivotB[0], pivotB[1], 2);
 			context.fillStyle = '#F00';
 			context.fill();
 		}
@@ -434,7 +246,7 @@ namespace engines
 			context.stroke();
 
 			context.beginPath();
-			DemoEngineBase.circle(context, pivotA[0], pivotA[1], 2);
+			DemoEngineBase.drawCircle(context, pivotA[0], pivotA[1], 2);
 			context.fillStyle = '#F00';
 			context.fill();
 		}
@@ -492,11 +304,11 @@ namespace engines
 			}
 
 			context.beginPath();
-			DemoEngineBase.circle(context, x1, y1, 2);
+			DemoEngineBase.drawCircle(context, x1, y1, 2);
 			context.fillStyle = '#F00';
 			context.fill();
 			context.beginPath();
-			DemoEngineBase.circle(context, x2, y2, 2);
+			DemoEngineBase.drawCircle(context, x2, y2, 2);
 			context.fillStyle = '#00F';
 			context.fill();
 		}
@@ -546,13 +358,41 @@ namespace engines
 
 
 			context.beginPath();
-			DemoEngineBase.circle(context, x1, y1, 2);
+			DemoEngineBase.drawCircle(context, x1, y1, 2);
 			context.fillStyle = '#F00';
 			context.fill();
 			context.beginPath();
-			DemoEngineBase.circle(context, x2, y2, 2);
+			DemoEngineBase.drawCircle(context, x2, y2, 2);
 			context.fillStyle = '#00F';
 			context.fill();
+		}
+
+		/*
+		 *** Utility Methods
+		 */
+
+		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		{
+			var body:Body = new Body({ mass: 1});
+			body.position = [x, y];
+			body.addShape(shape);
+			this.world.addBody(body);
+			if (pinned) {
+				var pin:RevoluteConstraint = new RevoluteConstraint(body, this.nullBody, {
+					worldPivot: body.position
+				});
+				this.world.addConstraint(pin);
+				(<any>body)._pin = pin;
+			}
+			return body;
+		}
+		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
+		{
+			return this.createBody(x, y, new Box(<any>{width: radius*2, height: radius*2}), pinned);
+		}
+		protected createCircle(x:number, y:number, radius:number, pinned?:boolean):Body
+		{
+			return this.createBody(x, y, new Circle({radius: radius}), pinned);
 		}
 
 		/*

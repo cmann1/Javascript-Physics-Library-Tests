@@ -70,6 +70,7 @@ namespace engines
 
 		loadDemoBasic:()=>void;
 		loadDemoStress:() => void;
+		loadDemoConstraints:() => void;
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
@@ -80,6 +81,23 @@ namespace engines
 				this.world.render();
 			}
 		};
+
+		/*
+		 *** Utility Methods
+		 */
+
+		protected createBody(x:number, y:number, shape:any, pinned?:boolean)
+		{
+			return null;
+		}
+		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
+		{
+			return null;
+		}
+		protected createCircle(x:number, y:number, radius:number, pinned?:boolean)
+		{
+			return null;
+		}
 
 		/*
 		 *** Events

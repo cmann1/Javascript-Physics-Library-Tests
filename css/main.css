@@ -67,6 +67,7 @@ html, body{
 .dg li.cr.dg-button-row {
 	border: none;
 	padding: 0;
+	user-select: none;
 }
 .dg li.cr.dg-button-row > div span.property-name{
 	width: auto;
