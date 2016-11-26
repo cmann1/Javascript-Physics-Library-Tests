@@ -18,6 +18,7 @@ namespace engines
 	import Sleeping = Matter.Sleeping;
 	import Events = Matter.Events;
 	import Mouse = Matter.Mouse;
+	import Vector = Matter.Vector;
 
 	export class MatterDemo extends DemoEngineBase
 	{
@@ -126,17 +127,38 @@ namespace engines
 		 *** Utility Methods
 		 */
 
+		protected pinBody(body:Body, pinned?:Boolean):Body
+		{
+			return body;
+		}
 		protected createBody(x:number, y:number, shape:any, pinned?:boolean)
 		{
-			return null;
+			throw new Error('MatterJs does not have the concept of shapes. createBody method not supported.');
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return null;
+			return this.pinBody(Bodies.rectangle(x, y, radius * 2, radius * 2), pinned);
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return null;
+			return this.pinBody(Bodies.circle(x, y, radius), pinned);
+		}
+
+		public static globalToLocal(body:Body, worldPoint:Vector, out:Vector = null)
+		{
+			if(!out)
+			{
+				out = Vector.create();
+			}
+
+			const sin = Math.sin(-body.angle);
+			const cos = Math.cos(-body.angle);
+			const x = worldPoint.x - body.position.x;
+			const y = worldPoint.y - body.position.y;
+			out.x = (x * cos - y * sin);
+			out.y = (x * sin + y * cos);
+
+			return out;
 		}
 
 		/*

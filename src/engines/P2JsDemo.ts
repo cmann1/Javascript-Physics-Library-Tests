@@ -371,12 +371,8 @@ namespace engines
 		 *** Utility Methods
 		 */
 
-		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		protected pinBody(body:Body, pinned?:Boolean):Body
 		{
-			var body:Body = new Body({ mass: 1});
-			body.position = [x, y];
-			body.addShape(shape);
-			this.world.addBody(body);
 			if (pinned) {
 				var pin:RevoluteConstraint = new RevoluteConstraint(body, this.nullBody, {
 					worldPivot: body.position
@@ -384,7 +380,17 @@ namespace engines
 				this.world.addConstraint(pin);
 				(<any>body)._pin = pin;
 			}
+
 			return body;
+		}
+		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		{
+			var body:Body = new Body({ mass: 1});
+			body.position = [x, y];
+			body.addShape(shape);
+			this.world.addBody(body);
+
+			return this.pinBody(body, pinned);
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
 		{

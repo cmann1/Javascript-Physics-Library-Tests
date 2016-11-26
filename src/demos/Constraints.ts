@@ -521,6 +521,9 @@ namespace demos
 		import Body = Matter.Body;
 		import Bodies = Matter.Bodies;
 		import World = Matter.World;
+		import Vector = Matter.Vector;
+		import MatterDemo = engines.MatterDemo;
+		import Constraint = Matter.Constraint;
 
 		engines.MatterDemo.prototype.loadDemoConstraints = function()
 		{
@@ -549,6 +552,61 @@ namespace demos
 				let body:Body = Bodies.rectangle(w / 2 * WORLD_SCALE, (i*cellHeight-0.5) * WORLD_SCALE, w * WORLD_SCALE, 1 * WORLD_SCALE, {isStatic: true});
 				World.add(this.world, body);
 			}
+
+			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+
+				World.add(this.world, b1);
+				World.add(this.world, b2);
+				var pivotPointA = Vector.create(x(cellWidth/2 - 1),y(cellHeight/2));
+				var pivotPointB = Vector.create(x(cellWidth/2 + 1),y(cellHeight/2));
+				var joint = Constraint.create({
+					bodyA: b1,
+					bodyB: b2,
+					pointA: MatterDemo.globalToLocal(b1, pivotPointA),
+					pointB: MatterDemo.globalToLocal(b2, pivotPointB),
+					stiffness: 0.1
+				});
+				World.add(this.world, joint);
+
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Revolute constraint not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Weld constraint not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function):void => {
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+
+				World.add(this.world, b1);
+				World.add(this.world, b2);
+				var joint = Constraint.create({
+					bodyA: b1,
+					bodyB: b2,
+					pointA: Vector.create(0, -size),
+					pointB: Vector.create(0, -size)
+				});
+				World.add(this.world, joint);
+			});
+
+			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function):void => {
+				this.addWarning(x(cellWidth/2), y(0) + 20, 'Line constraint not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function):void => {
+				this.addWarning(x(cellWidth/2), y(0) + 20, 'Pulley constraint not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function):void => {
+				this.addWarning(x(cellWidth/2), y(0) + 20, 'Gear constraint not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 1, 2, "MotorJoint", (x:Function, y:Function):void => {
+				this.addWarning(x(cellWidth/2), y(0) + 20, 'Motor constraint not supported', {valign: 'top'});
+			});
 		};
 	}
 

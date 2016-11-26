@@ -194,6 +194,10 @@ namespace engines
 		}
 
 		/**
+		 * Utility to pin a body.
+		 */
+		protected abstract pinBody<T>(body:T, pinned?:Boolean):T;
+		/**
 		 * Utility to create a (optionally) pinned body with the given shape
 		 */
 		protected abstract createBody<T>(x:number, y:number, shape:any, pinned?:boolean):T;

@@ -117,12 +117,8 @@ namespace engines
 		 *** Utility Methods
 		 */
 
-		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		protected pinBody(body:Body, pinned?:Boolean):Body
 		{
-			var body:Body = new Body();
-			body.position.setxy(x, y);
-			body.shapes.add(shape);
-			body.space = this.space;
 			if (pinned) {
 				var pin:PivotJoint = new PivotJoint(
 					this.space.world, body,
@@ -131,7 +127,17 @@ namespace engines
 				);
 				pin.space = this.space;
 			}
+
 			return body;
+		}
+		protected createBody(x:number, y:number, shape:any, pinned?:boolean):Body
+		{
+			var body:Body = new Body();
+			body.position.setxy(x, y);
+			body.shapes.add(shape);
+			body.space = this.space;
+
+			return this.pinBody(body, pinned);
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
 		{

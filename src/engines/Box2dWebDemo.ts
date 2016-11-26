@@ -205,6 +205,16 @@ namespace engines
 			return new b2Vec2(this.mouseX * this.worldScale, this.mouseY * this.worldScale);
 		}
 
+		protected pinBody(body:b2Body, pinned?:Boolean):b2Body
+		{
+			if (pinned) {
+				var jointDef:b2RevoluteJointDef = new b2RevoluteJointDef();
+				jointDef.Initialize(this.world.GetGroundBody(), body, body.GetWorldCenter());
+				this.world.CreateJoint(jointDef);
+			}
+
+			return body;
+		}
 		protected createBody(x:number, y:number, shape:any, pinned?:boolean):b2Body
 		{
 			var bodyDef:b2BodyDef = new b2BodyDef();
@@ -218,12 +228,8 @@ namespace engines
 			var body:b2Body = this.world.CreateBody(bodyDef);
 			fixDef.shape = shape;
 			body.CreateFixture(fixDef);
-			if (pinned) {
-				var jointDef:b2RevoluteJointDef = new b2RevoluteJointDef();
-				jointDef.Initialize(this.world.GetGroundBody(), body, body.GetWorldCenter());
-				this.world.CreateJoint(jointDef);
-			}
-			return body;
+
+			return this.pinBody(body, pinned);
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean):b2Body
 		{
