@@ -26,6 +26,9 @@ html, body{
 	touch-action: none;
 }
 
+div.dg.ac{
+	z-index: 100 !important;
+}
 .dg li.dgui-two-column-btn{
 	width: 50%;
 	box-sizing: border-box;
@@ -53,6 +56,7 @@ html, body{
 	text-shadow: 1px 1px 0 #000;
 	color: #FFF;
 	font-size: 20px;
+	z-index: 100;
 }
 #engine-display .inner{
 	/*margin-left: -50%;*/

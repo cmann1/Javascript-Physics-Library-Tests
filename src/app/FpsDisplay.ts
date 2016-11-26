@@ -7,6 +7,7 @@ namespace app.Fps
 	left: 10px; top: 10px;
 	padding: 2px 4px;
 	position: absolute;
+	z-index: 100;
 
 	background-color: #999;
 	border-radius: 3px;
