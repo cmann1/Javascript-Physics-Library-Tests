@@ -279,7 +279,7 @@ namespace demos
 				this.world.CreateJoint(jointDef);
 			});
 
-			 withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
 				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -519,11 +519,37 @@ namespace demos
 	namespace matterDemo
 	{
 		import Body = Matter.Body;
+		import Bodies = Matter.Bodies;
+		import World = Matter.World;
 
-		// engines.MatterDemo.prototype.loadDemoConstraints = function()
-		// {
-		//
-		// };
+		engines.MatterDemo.prototype.loadDemoConstraints = function()
+		{
+			const DRAW_SCALE = this.drawScale;
+			const WORLD_SCALE = this.worldScale;
+
+			this.engine.enableSleeping = true;
+			this.velocityIterations = VELOCITY_ITERATIONS;
+			this.positionIterations = POSITION_ITERATIONS;
+			this.world.gravity.x = 0;
+			this.world.gravity.y = 0.5;
+
+			const size = shapeSize * WORLD_SCALE;
+			const w:number = this.stageWidth;
+			const h:number = this.stageHeight;
+			cellWidth = w / cellWcnt;
+			cellHeight = h / cellHcnt;
+
+			// Create regions for each constraint demo
+			var i:number;
+			for (i = 1; i < cellWcnt; i++) {
+				let body:Body = Bodies.rectangle((i*cellWidth-0.5) * WORLD_SCALE, h / 2 * WORLD_SCALE, 1 * WORLD_SCALE, h * WORLD_SCALE, {isStatic: true});
+				World.add(this.world, body);
+			}
+			for (i = 1; i < cellHcnt; i++) {
+				let body:Body = Bodies.rectangle(w / 2 * WORLD_SCALE, (i*cellHeight-0.5) * WORLD_SCALE, w * WORLD_SCALE, 1 * WORLD_SCALE, {isStatic: true});
+				World.add(this.world, body);
+			}
+		};
 	}
 
 	namespace physicsJsDemo

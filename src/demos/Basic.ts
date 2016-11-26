@@ -140,8 +140,8 @@ namespace demos
 		engines.MatterDemo.prototype.loadDemoBasic = function()
 		{
 			this.engine.enableSleeping = true;
-			this.velocityIterations = 10;
-			this.positionIterations = 10;
+			this.velocityIterations = VELOCITY_ITERATIONS;
+			this.positionIterations = POSITION_ITERATIONS;
 			this.world.gravity.x = 0;
 			this.world.gravity.y = 0;
 

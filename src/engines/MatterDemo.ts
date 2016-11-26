@@ -24,15 +24,16 @@ namespace engines
 
 		public name:string = 'Matter';
 
-		private engine:Engine;
-		private world:World;
-		private render:Render;
+		protected engine:Engine;
+		protected world:World;
+		protected render:Render;
 
-		private simulationTime:number = 0;
-		private elapsedTime:number = 0;
-		private frameRateIntervalMs:number;
+		protected simulationTime:number = 0;
+		protected elapsedTime:number = 0;
+		protected frameRateIntervalMs:number;
 
-		private mouseConstraint:MouseConstraint;
+		protected mouseConstraint:MouseConstraint;
+		protected groundBody:Body;
 
 		setup()
 		{
@@ -61,8 +62,7 @@ namespace engines
 			var bot = Bodies.rectangle(hw, h+ht, w+t, t);
 			var lef = Bodies.rectangle(-ht, hh, t, h+t);
 			var rig = Bodies.rectangle(w+ht, hh, t, h+t);
-			var ground = Body.create({parts: [top, bot, lef, rig], isStatic: true});
-			World.add(this.world, ground);
+			this.groundBody = Body.create({parts: [top, bot, lef, rig], isStatic: true});
 
 			this.mouseConstraint = MouseConstraint.create(this.engine, {
 				mouse: Mouse.create(this.canvas)
@@ -80,13 +80,14 @@ namespace engines
 
 			this.simulationTime = 0;
 			this.elapsedTime = 0;
-			World.clear(this.world, true);
+			World.clear(this.world, false);
 		}
 
 		loadDemo(name:string)
 		{
 			super.loadDemo(name);
 
+			World.add(this.world, this.groundBody);
 			World.addConstraint(this.world, this.mouseConstraint.constraint);
 		}
 
