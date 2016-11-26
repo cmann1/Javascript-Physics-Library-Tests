@@ -129,47 +129,8 @@ namespace engines
 			super.loadDemo(name);
 		}
 
-		loadDemoBasic:()=>void;
-
-		loadDemoStress()
-		{
-			const WORLD_SCALE = this.worldScale;
-
-			this.velocityIterations = 35;
-			this.positionIterations = 15;
-			this.world.SetGravity(new b2Vec2(0, 9.82));
-
-			const sw = this.stageWidth;
-			const sh = this.stageHeight;
-			const boxWidth:number = 10;
-			const boxHeight:number = 14;
-			const bw:number = boxWidth * WORLD_SCALE * 0.5;
-			const bh:number = boxHeight * WORLD_SCALE * 0.5;
-			var pyramidHeight:number = 40; //820 blocks
-
-			var bodyDef:b2BodyDef = new b2BodyDef();
-			var fixDef:b2FixtureDef = new b2FixtureDef();
-
-			bodyDef.type = b2Body.b2_dynamicBody;
-			fixDef.density = 1.0;
-			fixDef.friction = 0.9;
-
-			for (var y:number = 1; y <= pyramidHeight; y++) {
-				for (var x:number = 0; x < y; x++) {
-					// We initialise the blocks to be slightly overlapping so that
-					// all contact points will be created in very first step before the blocks
-					// begin to fall.
-					bodyDef.position.Set(
-						((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * WORLD_SCALE,
-						(sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * WORLD_SCALE
-					);
-
-					let body:b2Body = this.world.CreateBody(bodyDef);
-					fixDef.shape = b2PolygonShape.AsBox(bw, bh);
-					body.CreateFixture(fixDef);
-				}
-			}
-		}
+		loadDemoBasic:() => void;
+		loadDemoStress:() => void;
 
 		loadDemoConstraints()
 		{

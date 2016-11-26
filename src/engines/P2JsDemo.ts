@@ -83,36 +83,8 @@ namespace engines
 			this.world.addBody(groundBody);
 		}
 
-		loadDemoBasic:()=>void;
-
-		loadDemoStress()
-		{
-			const WORLD_SCALE = this.worldScale;
-
-			this.velocityIterations = 35;
-			this.positionIterations = 15;
-			this.world.gravity = [0, 100 * WORLD_SCALE];
-
-			const sw = this.stageWidth;
-			const sh = this.stageHeight;
-			const boxWidth:number = 10;
-			const boxHeight:number = 14;
-			const bw:number = boxWidth * WORLD_SCALE;
-			const bh:number = boxHeight * WORLD_SCALE;
-			var pyramidHeight:number = 40; //820 blocks
-
-			for (var y:number = 1; y <= pyramidHeight; y++) {
-				for (var x:number = 0; x < y; x++) {
-					var block:Body = new Body({ mass: 1});
-					// We initialise the blocks to be slightly overlapping so that
-					// all contact points will be created in very first step before the blocks
-					// begin to fall.
-					block.position[0] = ((sw/2) - boxWidth*((y-1)/2 - x)*0.99) * WORLD_SCALE;
-					block.position[1] = (sh - boxHeight*(pyramidHeight - y + 0.5)*0.99) * WORLD_SCALE;
-					block.addShape(new Box(<any>{width: bw, height: bh}));
-					this.world.addBody(block);
-				}}
-		}
+		loadDemoBasic:() => void;
+		loadDemoStress:() => void;
 
 		loadDemoConstraints()
 		{

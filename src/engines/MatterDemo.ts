@@ -90,33 +90,8 @@ namespace engines
 			World.addConstraint(this.world, this.mouseConstraint.constraint);
 		}
 
-		loadDemoBasic:()=>void;
-
-		loadDemoStress()
-		{
-			this.engine.enableSleeping = false;
-			this.velocityIterations = 35;
-			this.positionIterations = 15;
-			this.world.gravity.x = 0;
-			this.world.gravity.y = 0.5;
-
-			var boxWidth:number = 10;
-			var boxHeight:number = 14;
-			var pyramidHeight:number = 40; //820 blocks
-
-			for (var y:number = 1; y <= pyramidHeight; y++) {
-				for (var x:number = 0; x < y; x++) {
-					// We initialise the blocks to be slightly overlapping so that
-					// all contact points will be created in very first step before the blocks
-					// begin to fall.
-					var block:Body = Bodies.rectangle(
-						(this.stageWidth/2) - boxWidth*((y-1)/2 - x)*0.99,
-						this.stageHeight - boxHeight*(pyramidHeight - y + 0.5)*0.99,
-						boxWidth,
-						boxHeight);
-					World.add(this.world, block);
-				}}
-		}
+		loadDemoBasic:() => void;
+		loadDemoStress:() => void;
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
