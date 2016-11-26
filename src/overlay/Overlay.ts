@@ -166,6 +166,8 @@ namespace overlay
 		public icon:OverlayIconDef;
 
 		protected lines:string[] = [];
+		protected textWidth:number;
+		protected lineWidths:number[] = null;
 
 		constructor(x:number, y:number, text:string = null, icon:OverlayIconDef = null, options?:OverlayOptions)
 		{
@@ -199,7 +201,7 @@ namespace overlay
 				iconHeight = 0,
 				textHeight = 0,
 				totalHeight:number,
-				lineWidths = [];
+				lineWidths;
 
 			context.save();
 
@@ -222,17 +224,29 @@ namespace overlay
 				context.font = `${options.fontSize}px ${options.fontFamily}`;
 				context.textBaseline = 'top';
 
-				for(let line of this.lines)
+				if(!this.lineWidths)
 				{
-					const width = context.measureText(line).width;
-					lineWidths.push(width);
-					if(width > textWidth)
+					this.lineWidths = lineWidths = [];
+
+					for(let line of this.lines)
 					{
-						textWidth = width;
+						const width = context.measureText(line).width;
+						lineWidths.push(width);
+						if(width > textWidth)
+						{
+							textWidth = width;
+						}
 					}
 
-					textHeight += this.options.lineHeight;
+					this.textWidth = textWidth;
 				}
+				else
+				{
+					lineWidths = this.lineWidths;
+					textWidth = this.textWidth;
+				}
+
+				textHeight = lineWidths.length * this.options.lineHeight;
 			}
 
 			totalWidth = iconWidth + textWidth;
@@ -337,8 +351,19 @@ namespace overlay
 				return;
 			}
 
+			if(typeof value !== 'string')
+			{
+				value = null;
+			}
+
+			if(value == null)
+			{
+				this.textWidth  = 0;
+				this.lineWidths = null;
+			}
+
 			this._text = value;
-			this.lines = value !== null
+			this.lines = value != null
 				? value.split(/[\n\r]/)
 				: [];
 		}
