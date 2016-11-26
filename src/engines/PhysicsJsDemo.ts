@@ -12,13 +12,15 @@ namespace engines
 		world:PhysicsWorld;
 		gravity;
 		renderer:CanvasRenderer;
-		bodies:any[];
+		bodies:PhysicsBody[];
+		constraints:PhysicsVerletConstraintsBehavior;
 
 		setup()
 		{
 			super.clear();
 
 			this.autoClearCanvas = true;
+			this.bodies = [];
 
 			Physics(
 				{
@@ -45,6 +47,9 @@ namespace engines
 						Physics.behavior('edge-collision-detection', {
 							aabb: Physics.aabb(0, 0, this.stageWidth, this.stageHeight),
 							restitution: 0.05
+						}),
+						this.constraints = <PhysicsVerletConstraintsBehavior> Physics.behavior('verlet-constraints', {
+							iterations: 3
 						})
 					]);
 				}
@@ -56,11 +61,13 @@ namespace engines
 			super.clear();
 			this.clearCanvas();
 
-			if(this.bodies)
+			if(this.bodies.length)
 			{
 				this.world.remove(this.bodies);
-				this.bodies = null;
+				this.bodies = [];
 			}
+
+			this.constraints.drop();
 		}
 
 		loadDemo(name:string)
@@ -86,17 +93,38 @@ namespace engines
 		 *** Utility Methods
 		 */
 
+		protected pinBody(body:PhysicsBody, pinned?:Boolean):PhysicsBody
+		{
+			return body;
+		}
 		protected createBody(x:number, y:number, shape:any, pinned?:boolean)
 		{
-			return null;
+			throw new Error('PhysicsJs does not have the concept of shapes. createBody method not supported.');
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return null;
+			var body = this.pinBody(Physics.body('rectangle', {
+				x: x,
+				y: y,
+				width: radius * 2,
+				height: radius * 2,
+				restitution: 0.3
+			}), pinned);
+			this.bodies.push(body);
+
+			return body;
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return null;
+			var body = this.pinBody(Physics.body('circle', {
+				x: x,
+				y: y,
+				radius: radius,
+				restitution: 0.3
+			}), pinned);
+			this.bodies.push(body);
+
+			return body;
 		}
 
 		/*

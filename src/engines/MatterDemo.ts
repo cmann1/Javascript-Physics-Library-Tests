@@ -147,11 +147,15 @@ namespace engines
 		}
 		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return this.pinBody(Bodies.rectangle(x, y, radius * 2, radius * 2), pinned);
+			var body = this.pinBody(Bodies.rectangle(x, y, radius * 2, radius * 2), pinned);
+			World.add(this.world, body);
+			return body;
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean)
 		{
-			return this.pinBody(Bodies.circle(x, y, radius), pinned);
+			var body = this.pinBody(Bodies.circle(x, y, radius), pinned);
+			World.add(this.world, body);
+			return body;
 		}
 
 		public static globalToLocal(body:Body, worldPoint:Vector, out:Vector = null)

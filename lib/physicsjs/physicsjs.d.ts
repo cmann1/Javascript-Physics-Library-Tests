@@ -38,6 +38,7 @@ interface PhysicsWorld
 
 interface PhysicsBody
 {
+	treatment:'dynamic'|'kinematic'|'static';
 	addChild(body:PhysicsBody):PhysicsBody;
 	clear():PhysicsBody;
 }
@@ -80,6 +81,19 @@ interface PhysicsBehavior
 {
 	applyTo(object:any):any;
 	setAcceleration(vec:any):void;
+}
+
+interface PhysicsVerletConstraintsBehavior extends PhysicsBehavior
+{
+	angleConstraint(bodyA:PhysicsBody, bodyB:PhysicsBody, bodyC:PhysicsBody, stiffness?:number, targetAngle?:number):any;
+	distanceConstraint(bodyA:PhysicsBody, bodyB:PhysicsBody, stiffness?:number, targetLength?:number):any;
+	drop():PhysicsVerletConstraintsBehavior;
+	getConstraints():any;
+	remove(constraintData:any):PhysicsVerletConstraintsBehavior;
+	resolve():void;
+	resolveAngleConstraints(coef:number):void;
+	resolveDistanceConstraints(coef:number):void;
+	shuffleConstraints():void;
 }
 
 interface PhysicsUtil

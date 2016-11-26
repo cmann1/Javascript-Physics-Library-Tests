@@ -171,7 +171,7 @@ namespace demos
 		engines.PhysicsJsDemo.prototype.loadDemoBasic = function()
 		{
 			this.gravity.setAcceleration({x: 0, y: 0});
-			var bodies = this.bodies = [];
+			const bodies = this.bodies;
 
 			// Generate some random objects!
 			for (var i:number = 0; i < 100; i++) {

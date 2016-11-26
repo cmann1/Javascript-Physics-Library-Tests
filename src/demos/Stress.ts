@@ -162,7 +162,7 @@ namespace demos
 		engines.PhysicsJsDemo.prototype.loadDemoStress = function()
 		{
 			this.gravity.setAcceleration({x: 0, y: 0.0004});
-			var bodies = this.bodies = [];
+			const bodies = this.bodies;
 
 			var boxWidth:number = 10;
 			var boxHeight:number = 14;
@@ -177,7 +177,8 @@ namespace demos
 						x: (this.stageWidth/2) - boxWidth*((y-1)/2 - x)*0.99,
 						y: this.stageHeight - boxHeight*(pyramidHeight - y + 0.5)*0.99,
 						width: boxWidth,
-						height: boxHeight
+						height: boxHeight,
+						restitution: 0.3
 					}));
 				}
 			}

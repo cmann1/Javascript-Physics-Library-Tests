@@ -10,6 +10,13 @@ namespace demos
 	import DemoEngineBase = engines.DemoEngineBase;
 	import VertFormat = engines.VertFormat;
 	import Overlay = overlay.Overlay;
+	import OverlayIcons = overlay.OverlayIcons;
+
+	enum ConstraintSupport
+	{
+		Supported,
+		NotSupported
+	}
 
 	const VELOCITY_ITERATIONS = 10;
 	const POSITION_ITERATIONS = 10;
@@ -30,17 +37,18 @@ namespace demos
 	// Environment for each cell.
 	function withCell(i:number, j:number, title:string, f:Function)
 	{
+		var result = f(
+			(x:number):number => { return (x + (i * cellWidth)) * this.worldScale; },
+			(y:number):number => { return (y + (j * cellHeight)) * this.worldScale; }
+		);
+
 		this.overlays.push(
 			new Overlay(
 				i * cellWidth + cellWidth * 0.5, j * cellHeight + 5,
-				title, null,
+				result === ConstraintSupport.NotSupported ? `${title} not supported` : title,
+				result === ConstraintSupport.NotSupported ? OverlayIcons.Warning : null,
 				{valign: 'top'}
 			)
-		);
-
-		f(
-			(x:number):number => { return (x + (i * cellWidth)) * this.worldScale; },
-			(y:number):number => { return (y + (j * cellHeight)) * this.worldScale; }
 		);
 	}
 
@@ -269,7 +277,7 @@ namespace demos
 				return c;
 			};
 
-			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -279,7 +287,7 @@ namespace demos
 				this.world.CreateJoint(jointDef);
 			});
 
-			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -290,7 +298,7 @@ namespace demos
 				this.world.CreateJoint(jointDef);
 			});
 
-			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size);
 
@@ -308,7 +316,7 @@ namespace demos
 				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Min/Max limits not supported', {valign: 'top'});
 			});
 
-			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -321,7 +329,7 @@ namespace demos
 				this.world.CreateJoint(jointDef);
 			});
 
-			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function) => {
 				var b1x = x(cellWidth/2);
 				var b1y = y(size);
 
@@ -340,7 +348,7 @@ namespace demos
 				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(cellHeight) * DRAW_SCALE - 10, 'Dynamic anchor points not supported', {valign: 'bottom'});
 			});
 
-			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createCircle(x(cellWidth/2)-size,y(cellHeight/2),size, true);
 				var b2:b2Body = this.createCircle(x(cellWidth/2)+size*2,y(cellHeight/2),size * 2, true);
 
@@ -353,7 +361,7 @@ namespace demos
 				this.world.CreateJoint(jointDef);
 			});
 
-			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function) => {
 				var b2:b2Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size, true);
 				var joint:b2RevoluteJoint = <b2RevoluteJoint> b2.GetJointList().joint;
 				joint.EnableMotor(true);
@@ -361,7 +369,7 @@ namespace demos
 				joint.SetMotorSpeed(1.5);
 			});
 
-			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
 				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -416,7 +424,7 @@ namespace demos
 				this.world.addBody(body);
 			}
 
-			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -425,7 +433,7 @@ namespace demos
 				this.world.addConstraint(joint);
 			});
 
-			withCell.call(this, 2, 0, "LockJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 0, "LockJoint", (x:Function, y:Function) => {
 				const a = Math.PI/4;
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				b1.angle = a * 1.5;
@@ -438,7 +446,7 @@ namespace demos
 				this.world.addConstraint(joint);
 			});
 
-			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size);
 
@@ -454,7 +462,7 @@ namespace demos
 				this.world.addConstraint(joint);
 			});
 
-			withCell.call(this, 1, 1, "LineJoint\n(PrismaticJoint/disableRotationalLock)", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 1, "LineJoint\n(PrismaticJoint/disableRotationalLock)", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -474,11 +482,11 @@ namespace demos
 				this.world.addConstraint(joint);
 			});
 
-			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Pulley constraint not supported', {valign: 'top'});
+			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 
-			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createCircle(x(cellWidth/2)-size,y(cellHeight/2),size, true);
 				var b2:Body = this.createCircle(x(cellWidth/2)+size*2,y(cellHeight/2),size * 2, true);
 
@@ -489,7 +497,7 @@ namespace demos
 
 			});
 
-			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size, true);
 
 				var joint:RevoluteConstraint = (<any>b1)._pin;
@@ -497,7 +505,7 @@ namespace demos
 				joint.setMotorSpeed(1.5);
 			});
 
-			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
@@ -553,12 +561,10 @@ namespace demos
 				World.add(this.world, body);
 			}
 
-			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
-				World.add(this.world, b1);
-				World.add(this.world, b2);
 				var pivotPointA = Vector.create(x(cellWidth/2 - 1),y(cellHeight/2));
 				var pivotPointB = Vector.create(x(cellWidth/2 + 1),y(cellHeight/2));
 				var joint = Constraint.create({
@@ -573,16 +579,14 @@ namespace demos
 				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Revolute constraint not supported\n(Strange behaviour)', {valign: 'top'});
 			});
 
-			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Weld constraint not supported', {valign: 'top'});
+			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 
-			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function):void => {
+			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
 				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
 				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
 
-				World.add(this.world, b1);
-				World.add(this.world, b2);
 				var joint = Constraint.create({
 					bodyA: b1,
 					bodyB: b2,
@@ -590,22 +594,28 @@ namespace demos
 					pointB: Vector.create(0, -size)
 				});
 				World.add(this.world, joint);
+
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Limits not supported', {valign: 'top'});
 			});
 
-			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2), y(0) + 20, 'Line constraint not supported', {valign: 'top'});
+			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 
-			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2), y(0) + 20, 'Pulley constraint not supported', {valign: 'top'});
+			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 
-			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2), y(0) + 20, 'Gear constraint not supported', {valign: 'top'});
+			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 
-			withCell.call(this, 1, 2, "MotorJoint", (x:Function, y:Function):void => {
-				this.addWarning(x(cellWidth/2), y(0) + 20, 'Motor constraint not supported', {valign: 'top'});
+			withCell.call(this, 1, 2, "MotorJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
 			});
 		};
 	}
@@ -614,7 +624,83 @@ namespace demos
 	{
 		engines.PhysicsJsDemo.prototype.loadDemoConstraints = function()
 		{
+			const DRAW_SCALE = this.drawScale;
+			const WORLD_SCALE = this.worldScale;
 
+			this.gravity.setAcceleration({x: 0, y: 0.0004});
+			const bodies = this.bodies;
+
+			const size = shapeSize * WORLD_SCALE;
+			const w:number = this.stageWidth;
+			const h:number = this.stageHeight;
+			cellWidth = w / cellWcnt;
+			cellHeight = h / cellHcnt;
+
+			// Create regions for each constraint demo
+			var i:number;
+			for (i = 1; i < cellWcnt; i++) {
+				bodies.push(Physics.body('rectangle', {
+					x: (i*cellWidth-0.5) * WORLD_SCALE,
+					y: h / 2 * WORLD_SCALE,
+					width: 1 * WORLD_SCALE,
+					height: h * WORLD_SCALE,
+					restitution: 0.3,
+					treatment: 'static'
+				}));
+			}
+			for (i = 1; i < cellHcnt; i++) {
+				bodies.push(Physics.body('rectangle', {
+					x: w / 2 * WORLD_SCALE,
+					y: (i*cellHeight-0.5) * WORLD_SCALE,
+					width: w * WORLD_SCALE,
+					height: 1 * WORLD_SCALE,
+					restitution: 0.3,
+					treatment: 'static'
+				}));
+			}
+
+			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 2, 0, "AngleJoint", (x:Function, y:Function) => {
+				var b1:PhysicsBody = this.createBox(x(1*cellWidth/4),y(cellHeight/3),size);
+				var b2:PhysicsBody = this.createBox(x(3*cellWidth/4),y(cellHeight/3),size);
+				var b3:PhysicsBody = this.createBox(x(cellWidth/2),y(cellHeight/1.5),size);
+
+				this.constraints.angleConstraint(b1, b2, b3);
+			});
+
+			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
+				var b1:PhysicsBody = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
+				var b2:PhysicsBody = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+
+				this.constraints.distanceConstraint(b1, b2);
+
+				this.addWarning(x(cellWidth/2) * DRAW_SCALE, y(0) * DRAW_SCALE + 20, 'Anchors/Limits not supported', {valign: 'top'});
+			});
+
+			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 0, 2, "GearJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 1, 2, "MotorJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
+				return ConstraintSupport.NotSupported;
+			});
+
+			this.world.add(this.bodies);
 		};
 	}
 
