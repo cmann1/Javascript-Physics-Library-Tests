@@ -715,6 +715,7 @@ declare module nape {
             public next(): nape.geom.Vec2;
             constructor();
         }
+        export type IsoFunctionDef = (__0: number, __1: number) => number;
         export class MarchingSquares {
             public static run(iso: nape.geom.IsoFunctionDef, bounds: nape.geom.AABB, cellsize: nape.geom.Vec2, quality?: number, subgrid?: nape.geom.Vec2, combine?: boolean, output?: nape.geom.GeomPolyList): nape.geom.GeomPolyList;
         }
@@ -1393,6 +1394,7 @@ declare module nape {
         public static constraintAngularSlop: number;
         public static illConditionedThreshold: number;
     }
+    export type TArray = any[];
 }
 declare module zpp_nape {
     export module callbacks {
