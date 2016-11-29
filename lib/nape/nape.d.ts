@@ -1,8 +1,6 @@
 ///<reference path='./debugDraw/nape-debug-draw.d.ts'/>
 
-declare module nape{
-    // import zpp_nape = require("zpp_nape");
-    // import nape = require("nape");
+declare module nape {
     export module callbacks {
         export class Callback {
             public zpp_inner: zpp_nape.callbacks.ZPP_Callback;
@@ -65,6 +63,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.callbacks.CbType;
             public static zpp_pool: nape.callbacks.CbTypeIterator;
+            public static get(list: nape.callbacks.CbTypeList): nape.callbacks.CbTypeIterator;
             constructor();
         }
         export class CbTypeList {
@@ -74,6 +73,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.callbacks.CbTypeIterator;
             public foreach: (lambda: (__0: nape.callbacks.CbType) => void) => nape.callbacks.CbTypeList;
+            public static fromArray(array: any[]): nape.callbacks.CbTypeList;
             public has(obj: nape.callbacks.CbType): boolean;
             public at(index: number): nape.callbacks.CbType;
             public push(obj: nape.callbacks.CbType): boolean;
@@ -131,6 +131,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.callbacks.Listener;
             public static zpp_pool: nape.callbacks.ListenerIterator;
+            public static get(list: nape.callbacks.ListenerList): nape.callbacks.ListenerIterator;
             constructor();
         }
         export class ListenerList {
@@ -140,6 +141,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.callbacks.ListenerIterator;
             public foreach: (lambda: (__0: nape.callbacks.Listener) => void) => nape.callbacks.ListenerList;
+            public static fromArray(array: any[]): nape.callbacks.ListenerList;
             public has(obj: nape.callbacks.Listener): boolean;
             public at(index: number): nape.callbacks.Listener;
             public push(obj: nape.callbacks.Listener): boolean;
@@ -245,6 +247,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.constraint.Constraint;
             public static zpp_pool: nape.constraint.ConstraintIterator;
+            public static get(list: nape.constraint.ConstraintList): nape.constraint.ConstraintIterator;
             constructor();
         }
         export class ConstraintList {
@@ -254,6 +257,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.constraint.ConstraintIterator;
             public foreach: (lambda: (__0: nape.constraint.Constraint) => void) => nape.constraint.ConstraintList;
+            public static fromArray(array: any[]): nape.constraint.ConstraintList;
             public has(obj: nape.constraint.Constraint): boolean;
             public at(index: number): nape.constraint.Constraint;
             public push(obj: nape.constraint.Constraint): boolean;
@@ -397,11 +401,13 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.dynamics.Arbiter;
             public static zpp_pool: nape.dynamics.ArbiterIterator;
+            public static get(list: nape.dynamics.ArbiterList): nape.dynamics.ArbiterIterator;
             constructor();
         }
         export class ArbiterList {
             public zpp_inner: zpp_nape.util.ZPP_ArbiterList;
             public length: number;
+            public static fromArray(array: any[]): nape.dynamics.ArbiterList;
             public zpp_gl(): number;
             public zpp_vm(): void;
             public has(obj: nape.dynamics.Arbiter): boolean;
@@ -469,6 +475,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.dynamics.Contact;
             public static zpp_pool: nape.dynamics.ContactIterator;
+            public static get(list: nape.dynamics.ContactList): nape.dynamics.ContactIterator;
             constructor();
         }
         export class ContactList {
@@ -478,6 +485,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.dynamics.ContactIterator;
             public foreach: (lambda: (__0: nape.dynamics.Contact) => void) => nape.dynamics.ContactList;
+            public static fromArray(array: any[]): nape.dynamics.ContactList;
             public has(obj: nape.dynamics.Contact): boolean;
             public at(index: number): nape.dynamics.Contact;
             public push(obj: nape.dynamics.Contact): boolean;
@@ -534,6 +542,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.dynamics.InteractionGroup;
             public static zpp_pool: nape.dynamics.InteractionGroupIterator;
+            public static get(list: nape.dynamics.InteractionGroupList): nape.dynamics.InteractionGroupIterator;
             constructor();
         }
         export class InteractionGroupList {
@@ -543,6 +552,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.dynamics.InteractionGroupIterator;
             public foreach: (lambda: (__0: nape.dynamics.InteractionGroup) => void) => nape.dynamics.InteractionGroupList;
+            public static fromArray(array: any[]): nape.dynamics.InteractionGroupList;
             public has(obj: nape.dynamics.InteractionGroup): boolean;
             public at(index: number): nape.dynamics.InteractionGroup;
             public push(obj: nape.dynamics.InteractionGroup): boolean;
@@ -589,6 +599,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.geom.ConvexResult;
             public static zpp_pool: nape.geom.ConvexResultIterator;
+            public static get(list: nape.geom.ConvexResultList): nape.geom.ConvexResultIterator;
             constructor();
         }
         export class ConvexResultList {
@@ -598,6 +609,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.geom.ConvexResultIterator;
             public foreach: (lambda: (__0: nape.geom.ConvexResult) => void) => nape.geom.ConvexResultList;
+            public static fromArray(array: any[]): nape.geom.ConvexResultList;
             public has(obj: nape.geom.ConvexResult): boolean;
             public at(index: number): nape.geom.ConvexResult;
             public push(obj: nape.geom.ConvexResult): boolean;
@@ -613,6 +625,11 @@ declare module nape{
             constructor();
         }
         export class Geom {
+            public static distanceBody(body1: nape.phys.Body, body2: nape.phys.Body, out1: nape.geom.Vec2, out2: nape.geom.Vec2): number;
+            public static distance(shape1: nape.shape.Shape, shape2: nape.shape.Shape, out1: nape.geom.Vec2, out2: nape.geom.Vec2): number;
+            public static intersectsBody(body1: nape.phys.Body, body2: nape.phys.Body): boolean;
+            public static intersects(shape1: nape.shape.Shape, shape2: nape.shape.Shape): boolean;
+            public static contains(shape1: nape.shape.Shape, shape2: nape.shape.Shape): boolean;
         }
         export class GeomPoly {
             public zpp_pool: nape.geom.GeomPoly;
@@ -628,6 +645,7 @@ declare module nape{
             public isSimple: () => boolean;
             public isMonotone: () => boolean;
             public isDegenerate: () => boolean;
+            public static get(vertices?: any): nape.geom.GeomPoly;
             public size(): number;
             public push(vertex: nape.geom.Vec2): nape.geom.GeomPoly;
             public pop(): nape.geom.GeomPoly;
@@ -666,6 +684,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.geom.GeomPoly;
             public static zpp_pool: nape.geom.GeomPolyIterator;
+            public static get(list: nape.geom.GeomPolyList): nape.geom.GeomPolyIterator;
             constructor();
         }
         export class GeomPolyList {
@@ -675,6 +694,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.geom.GeomPolyIterator;
             public foreach: (lambda: (__0: nape.geom.GeomPoly) => void) => nape.geom.GeomPolyList;
+            public static fromArray(array: any[]): nape.geom.GeomPolyList;
             public has(obj: nape.geom.GeomPoly): boolean;
             public at(index: number): nape.geom.GeomPoly;
             public push(obj: nape.geom.GeomPoly): boolean;
@@ -696,6 +716,7 @@ declare module nape{
             constructor();
         }
         export class MarchingSquares {
+            public static run(iso: nape.geom.IsoFunctionDef, bounds: nape.geom.AABB, cellsize: nape.geom.Vec2, quality?: number, subgrid?: nape.geom.Vec2, combine?: boolean, output?: nape.geom.GeomPolyList): nape.geom.GeomPolyList;
         }
         export class Mat23 {
             public zpp_inner: zpp_nape.geom.ZPP_Mat23;
@@ -707,6 +728,9 @@ declare module nape{
             public ty: number;
             public reset: () => nape.geom.Mat23;
             public determinant: number;
+            public static rotation(angle: number): nape.geom.Mat23;
+            public static translation(tx: number, ty: number): nape.geom.Mat23;
+            public static scale(sx: number, sy: number): nape.geom.Mat23;
             public copy(): nape.geom.Mat23;
             public set(matrix: nape.geom.Mat23): nape.geom.Mat23;
             public setAs(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number): nape.geom.Mat23;
@@ -740,6 +764,7 @@ declare module nape{
             public origin: nape.geom.Vec2;
             public direction: nape.geom.Vec2;
             public maxDistance: number;
+            public static fromSegment(start: nape.geom.Vec2, end: nape.geom.Vec2): nape.geom.Ray;
             public aabb(): nape.geom.AABB;
             public at(distance: number, weak?: boolean): nape.geom.Vec2;
             public copy(): nape.geom.Ray;
@@ -763,6 +788,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.geom.RayResult;
             public static zpp_pool: nape.geom.RayResultIterator;
+            public static get(list: nape.geom.RayResultList): nape.geom.RayResultIterator;
             constructor();
         }
         export class RayResultList {
@@ -772,6 +798,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.geom.RayResultIterator;
             public foreach: (lambda: (__0: nape.geom.RayResult) => void) => nape.geom.RayResultList;
+            public static fromArray(array: any[]): nape.geom.RayResultList;
             public has(obj: nape.geom.RayResult): boolean;
             public at(index: number): nape.geom.RayResult;
             public push(obj: nape.geom.RayResult): boolean;
@@ -798,10 +825,11 @@ declare module nape{
             public set: (vector: nape.geom.Vec2) => nape.geom.Vec2;
             public setxy: (x: number, y: number) => nape.geom.Vec2;
             public angle: number;
-            public static weak: (x: number, y: number) => nape.geom.Vec2;
+            public static weak: (x?: number, y?: number) => nape.geom.Vec2;
             public static get: (x?: number, y?: number, weak?: boolean) => nape.geom.Vec2;
             public static dsq: (a: nape.geom.Vec2, b: nape.geom.Vec2) => number;
             public static distance: (a: nape.geom.Vec2, b: nape.geom.Vec2) => number;
+            public static fromPolar(length: number, angle: number, weak?: boolean): nape.geom.Vec2;
             public lsq(): number;
             public rotate(angle: number): nape.geom.Vec2;
             public reflect(vec: nape.geom.Vec2, weak?: boolean): nape.geom.Vec2;
@@ -828,11 +856,13 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.geom.Vec2;
             public static zpp_pool: nape.geom.Vec2Iterator;
+            public static get(list: nape.geom.Vec2List): nape.geom.Vec2Iterator;
             constructor();
         }
         export class Vec2List {
             public zpp_inner: zpp_nape.util.ZPP_Vec2List;
             public length: number;
+            public static fromArray(array: any[]): nape.geom.Vec2List;
             public zpp_gl(): number;
             public zpp_vm(): void;
             public has(obj: nape.geom.Vec2): boolean;
@@ -861,6 +891,7 @@ declare module nape{
             public y: number;
             public z: number;
             public length: number;
+            public static get(x?: number, y?: number, z?: number): nape.geom.Vec3;
             public dispose(): void;
             public lsq(): number;
             public set(vector: nape.geom.Vec3): nape.geom.Vec3;
@@ -975,6 +1006,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.phys.Body;
             public static zpp_pool: nape.phys.BodyIterator;
+            public static get(list: nape.phys.BodyList): nape.phys.BodyIterator;
             constructor();
         }
         export class BodyList {
@@ -984,6 +1016,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.phys.BodyIterator;
             public foreach: (lambda: (__0: nape.phys.Body) => void) => nape.phys.BodyList;
+            public static fromArray(array: any[]): nape.phys.BodyList;
             public has(obj: nape.phys.Body): boolean;
             public at(index: number): nape.phys.Body;
             public push(obj: nape.phys.Body): boolean;
@@ -1031,6 +1064,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.phys.Compound;
             public static zpp_pool: nape.phys.CompoundIterator;
+            public static get(list: nape.phys.CompoundList): nape.phys.CompoundIterator;
             constructor();
         }
         export class CompoundList {
@@ -1040,6 +1074,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.phys.CompoundIterator;
             public foreach: (lambda: (__0: nape.phys.Compound) => void) => nape.phys.CompoundList;
+            public static fromArray(array: any[]): nape.phys.CompoundList;
             public has(obj: nape.phys.Compound): boolean;
             public at(index: number): nape.phys.Compound;
             public push(obj: nape.phys.Compound): boolean;
@@ -1086,6 +1121,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.phys.Interactor;
             public static zpp_pool: nape.phys.InteractorIterator;
+            public static get(list: nape.phys.InteractorList): nape.phys.InteractorIterator;
             constructor();
         }
         export class InteractorList {
@@ -1095,6 +1131,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.phys.InteractorIterator;
             public foreach: (lambda: (__0: nape.phys.Interactor) => void) => nape.phys.InteractorList;
+            public static fromArray(array: any[]): nape.phys.InteractorList;
             public has(obj: nape.phys.Interactor): boolean;
             public at(index: number): nape.phys.Interactor;
             public push(obj: nape.phys.Interactor): boolean;
@@ -1124,6 +1161,12 @@ declare module nape{
             public staticFriction: number;
             public density: number;
             public rollingFriction: number;
+            public static wood(): nape.phys.Material;
+            public static steel(): nape.phys.Material;
+            public static ice(): nape.phys.Material;
+            public static rubber(): nape.phys.Material;
+            public static glass(): nape.phys.Material;
+            public static sand(): nape.phys.Material;
             public copy(): nape.phys.Material;
             public toString(): String;
             constructor(elasticity?: number, dynamicFriction?: number, staticFriction?: number, density?: number, rollingFriction?: number);
@@ -1186,6 +1229,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.shape.Edge;
             public static zpp_pool: nape.shape.EdgeIterator;
+            public static get(list: nape.shape.EdgeList): nape.shape.EdgeIterator;
             constructor();
         }
         export class EdgeList {
@@ -1195,6 +1239,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.shape.EdgeIterator;
             public foreach: (lambda: (__0: nape.shape.Edge) => void) => nape.shape.EdgeList;
+            public static fromArray(array: any[]): nape.shape.EdgeList;
             public has(obj: nape.shape.Edge): boolean;
             public at(index: number): nape.shape.Edge;
             public push(obj: nape.shape.Edge): boolean;
@@ -1214,11 +1259,11 @@ declare module nape{
             public localVerts: nape.geom.Vec2List;
             public worldVerts: nape.geom.Vec2List;
             public edges: nape.shape.EdgeList;
+            public static rect(x: number, y: number, width: number, height: number, weak?: boolean): any[];
+            public static box(width: number, height: number, weak?: boolean): any[];
+            public static regular(xRadius: number, yRadius: number, edgeCount: number, angleOffset?: number, weak?: boolean): any[];
             public validity(): nape.shape.ValidationResult;
             constructor(localVerts: any, material?: nape.phys.Material, filter?: nape.dynamics.InteractionFilter);
-            public static rect(x,y,width,height,weak?):nape.geom.Vec2[];
-            public static box(width,height,weak?):nape.geom.Vec2[];
-            public static regular(xRadius,yRadius,edgeCount,angleOffset?,weak?):nape.geom.Vec2[];
         }
         export class ShapeIterator {
             public zpp_inner: nape.shape.ShapeList;
@@ -1228,6 +1273,7 @@ declare module nape{
             public hasNext: () => boolean;
             public next: () => nape.shape.Shape;
             public static zpp_pool: nape.shape.ShapeIterator;
+            public static get(list: nape.shape.ShapeList): nape.shape.ShapeIterator;
             constructor();
         }
         export class ShapeList {
@@ -1237,6 +1283,7 @@ declare module nape{
             public empty: () => boolean;
             public iterator: () => nape.shape.ShapeIterator;
             public foreach: (lambda: (__0: nape.shape.Shape) => void) => nape.shape.ShapeList;
+            public static fromArray(array: any[]): nape.shape.ShapeList;
             public has(obj: nape.shape.Shape): boolean;
             public at(index: number): nape.shape.Shape;
             public push(obj: nape.shape.Shape): boolean;
@@ -1314,6 +1361,8 @@ declare module nape{
             constructor(gravity?: nape.geom.Vec2, broadphase?: nape.space.Broadphase);
         }
     }
+    export module util {
+    }
     export class Config {
         public static epsilon: number;
         public static fluidAngularDragFriction: number;
@@ -1345,9 +1394,7 @@ declare module nape{
         public static illConditionedThreshold: number;
     }
 }
-declare module zpp_nape{
-    // import zpp_nape = require("zpp_nape");
-    // import nape = require("nape");
+declare module zpp_nape {
     export module callbacks {
         export class ZPP_Callback {
             public outer_body: nape.callbacks.BodyCallback;
@@ -1425,6 +1472,9 @@ declare module zpp_nape{
             public static zpp_pool: zpp_nape.callbacks.ZPP_CbSet;
             public static empty_intersection: (a: zpp_nape.callbacks.ZPP_CbSet, b: zpp_nape.callbacks.ZPP_CbSet) => boolean;
             public static find_all: (a: zpp_nape.callbacks.ZPP_CbSet, b: zpp_nape.callbacks.ZPP_CbSet, event: number, cb: (__0: zpp_nape.callbacks.ZPP_InteractionListener) => void) => void;
+            public static setlt(a: zpp_nape.callbacks.ZPP_CbSet, b: zpp_nape.callbacks.ZPP_CbSet): boolean;
+            public static get(cbTypes: zpp_nape.util.ZNPList_ZPP_CbType): zpp_nape.callbacks.ZPP_CbSet;
+            public static single_intersection(a: zpp_nape.callbacks.ZPP_CbSet, b: zpp_nape.callbacks.ZPP_CbSet, i: zpp_nape.callbacks.ZPP_InteractionListener): boolean;
             public invalidate_pairs(): void;
             public realvalidate_listeners(): void;
             public realvalidate_bodylisteners(): void;
@@ -1494,8 +1544,8 @@ declare module zpp_nape{
             public interaction: zpp_nape.callbacks.ZPP_InteractionListener;
             public space: zpp_nape.space.ZPP_Space;
             public static internal: boolean;
-            public static types: Array<any>;
-            public static events: Array<any>;
+            public static types: any[];
+            public static events: any[];
             public static setlt: (a: zpp_nape.callbacks.ZPP_Listener, b: zpp_nape.callbacks.ZPP_Listener) => boolean;
             public swapEvent(event: number): void;
             public invalidate_precedence(): void;
@@ -1551,6 +1601,7 @@ declare module zpp_nape{
             public included: (xs: zpp_nape.util.ZNPList_ZPP_CbType) => boolean;
             public compatible: (xs: zpp_nape.util.ZNPList_ZPP_CbType) => boolean;
             public effect_change: (val: zpp_nape.callbacks.ZPP_CbType, included: boolean, added: boolean) => void;
+            public static argument(val: any): nape.callbacks.OptionType;
             public setup_includes(): void;
             public setup_excludes(): void;
             public nonemptyintersection(xs: zpp_nape.util.ZNPList_ZPP_CbType, ys: zpp_nape.util.ZNPList_ZPP_CbType): boolean;
@@ -3285,6 +3336,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public at_ite: zpp_nape.geom.ZPP_Vec2;
             public at_index: number;
+            public static get(list: zpp_nape.geom.ZPP_Vec2, immutable?: boolean): zpp_nape.util.ZPP_MixVec2List;
             public zpp_gl(): number;
             public zpp_vm(): void;
             public at(index: number): nape.geom.Vec2;
@@ -3315,6 +3367,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Constraint, imm?: boolean): nape.constraint.ConstraintList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3341,6 +3394,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Body, imm?: boolean): nape.phys.BodyList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3367,6 +3421,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Interactor, imm?: boolean): nape.phys.InteractorList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3393,6 +3448,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Compound, imm?: boolean): nape.phys.CompoundList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3419,6 +3475,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Listener, imm?: boolean): nape.callbacks.ListenerList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3445,6 +3502,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_CbType, imm?: boolean): nape.callbacks.CbTypeList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3471,6 +3529,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Vec2, imm?: boolean): nape.geom.Vec2List;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3497,6 +3556,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_GeomPoly, imm?: boolean): nape.geom.GeomPolyList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3523,6 +3583,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_RayResult, imm?: boolean): nape.geom.RayResultList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3549,6 +3610,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ConvexResult, imm?: boolean): nape.geom.ConvexResultList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3575,6 +3637,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Edge, imm?: boolean): nape.shape.EdgeList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3601,6 +3664,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Shape, imm?: boolean): nape.shape.ShapeList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3627,6 +3691,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_InteractionGroup, imm?: boolean): nape.dynamics.InteractionGroupList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3653,6 +3718,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.util.ZNPList_ZPP_Arbiter, imm?: boolean): nape.dynamics.ArbiterList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3679,6 +3745,7 @@ declare module zpp_nape{
             public zip_length: boolean;
             public user_length: number;
             public static internal: boolean;
+            public static get(list: zpp_nape.dynamics.ZPP_Contact, imm?: boolean): nape.dynamics.ContactList;
             public valmod(): void;
             public modified(): void;
             public modify_test(): void;
@@ -3733,7 +3800,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_Body): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_Body): void;
-            public try_insert_boolean(obj: zpp_nape.phys.ZPP_Body): boolean;
+            public try_insert_bool(obj: zpp_nape.phys.ZPP_Body): boolean;
             public try_insert(obj: zpp_nape.phys.ZPP_Body): zpp_nape.util.ZPP_Set_ZPP_Body;
             public insert(obj: zpp_nape.phys.ZPP_Body): zpp_nape.util.ZPP_Set_ZPP_Body;
             constructor();
@@ -3770,7 +3837,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_CbSetPair): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_CbSetPair): void;
-            public try_insert_boolean(obj: zpp_nape.callbacks.ZPP_CbSetPair): boolean;
+            public try_insert_bool(obj: zpp_nape.callbacks.ZPP_CbSetPair): boolean;
             public try_insert(obj: zpp_nape.callbacks.ZPP_CbSetPair): zpp_nape.util.ZPP_Set_ZPP_CbSetPair;
             public insert(obj: zpp_nape.callbacks.ZPP_CbSetPair): zpp_nape.util.ZPP_Set_ZPP_CbSetPair;
             constructor();
@@ -3807,7 +3874,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_PartitionVertex): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_PartitionVertex): void;
-            public try_insert_boolean(obj: zpp_nape.geom.ZPP_PartitionVertex): boolean;
+            public try_insert_bool(obj: zpp_nape.geom.ZPP_PartitionVertex): boolean;
             public try_insert(obj: zpp_nape.geom.ZPP_PartitionVertex): zpp_nape.util.ZPP_Set_ZPP_PartitionVertex;
             public insert(obj: zpp_nape.geom.ZPP_PartitionVertex): zpp_nape.util.ZPP_Set_ZPP_PartitionVertex;
             constructor();
@@ -3844,7 +3911,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_PartitionPair): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_PartitionPair): void;
-            public try_insert_boolean(obj: zpp_nape.geom.ZPP_PartitionPair): boolean;
+            public try_insert_bool(obj: zpp_nape.geom.ZPP_PartitionPair): boolean;
             public try_insert(obj: zpp_nape.geom.ZPP_PartitionPair): zpp_nape.util.ZPP_Set_ZPP_PartitionPair;
             public insert(obj: zpp_nape.geom.ZPP_PartitionPair): zpp_nape.util.ZPP_Set_ZPP_PartitionPair;
             constructor();
@@ -3881,7 +3948,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_SimpleVert): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_SimpleVert): void;
-            public try_insert_boolean(obj: zpp_nape.geom.ZPP_SimpleVert): boolean;
+            public try_insert_bool(obj: zpp_nape.geom.ZPP_SimpleVert): boolean;
             public try_insert(obj: zpp_nape.geom.ZPP_SimpleVert): zpp_nape.util.ZPP_Set_ZPP_SimpleVert;
             public insert(obj: zpp_nape.geom.ZPP_SimpleVert): zpp_nape.util.ZPP_Set_ZPP_SimpleVert;
             constructor();
@@ -3918,7 +3985,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_SimpleSeg): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_SimpleSeg): void;
-            public try_insert_boolean(obj: zpp_nape.geom.ZPP_SimpleSeg): boolean;
+            public try_insert_bool(obj: zpp_nape.geom.ZPP_SimpleSeg): boolean;
             public try_insert(obj: zpp_nape.geom.ZPP_SimpleSeg): zpp_nape.util.ZPP_Set_ZPP_SimpleSeg;
             public insert(obj: zpp_nape.geom.ZPP_SimpleSeg): zpp_nape.util.ZPP_Set_ZPP_SimpleSeg;
             constructor();
@@ -3955,7 +4022,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_SimpleEvent): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_SimpleEvent): void;
-            public try_insert_boolean(obj: zpp_nape.geom.ZPP_SimpleEvent): boolean;
+            public try_insert_bool(obj: zpp_nape.geom.ZPP_SimpleEvent): boolean;
             public try_insert(obj: zpp_nape.geom.ZPP_SimpleEvent): zpp_nape.util.ZPP_Set_ZPP_SimpleEvent;
             public insert(obj: zpp_nape.geom.ZPP_SimpleEvent): zpp_nape.util.ZPP_Set_ZPP_SimpleEvent;
             constructor();
@@ -3992,7 +4059,7 @@ declare module zpp_nape{
             public clear(): void;
             public __fix_neg_red(negred: zpp_nape.util.ZPP_Set_ZPP_CbSet): void;
             public __fix_dbl_red(x: zpp_nape.util.ZPP_Set_ZPP_CbSet): void;
-            public try_insert_boolean(obj: zpp_nape.callbacks.ZPP_CbSet): boolean;
+            public try_insert_bool(obj: zpp_nape.callbacks.ZPP_CbSet): boolean;
             public try_insert(obj: zpp_nape.callbacks.ZPP_CbSet): zpp_nape.util.ZPP_Set_ZPP_CbSet;
             public insert(obj: zpp_nape.callbacks.ZPP_CbSet): zpp_nape.util.ZPP_Set_ZPP_CbSet;
             constructor();
@@ -4047,7 +4114,7 @@ declare module zpp_nape{
             public applyImpulsePos(): boolean;
             public wake(): void;
             public draw(g: nape.util.Debug): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public copyto(ret: nape.constraint.Constraint): void;
             constructor();
         }
@@ -4071,7 +4138,7 @@ declare module zpp_nape{
             public bodyImpulse(b: zpp_nape.phys.ZPP_Body): nape.geom.Vec3;
             public activeBodies(): void;
             public inactiveBodies(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4088,6 +4155,8 @@ declare module zpp_nape{
             public id: number;
             public bc: nape.phys.Body;
             public cb: (__0: nape.phys.Body) => void;
+            public static dict(id: number, bc: nape.phys.Body): zpp_nape.constraint.ZPP_CopyHelper;
+            public static todo(id: number, cb: (__0: nape.phys.Body) => void): zpp_nape.constraint.ZPP_CopyHelper;
         }
         export class ZPP_DistanceJoint extends zpp_nape.constraint.ZPP_Constraint {
             public outer_zn: nape.constraint.DistanceJoint;
@@ -4123,7 +4192,7 @@ declare module zpp_nape{
             public inactiveBodies(): void;
             public setup_a1(): void;
             public setup_a2(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4181,7 +4250,7 @@ declare module zpp_nape{
             public setup_a2(): void;
             public setup_n(): void;
             public validate_norm(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4207,7 +4276,7 @@ declare module zpp_nape{
             public bodyImpulse(b: zpp_nape.phys.ZPP_Body): nape.geom.Vec3;
             public activeBodies(): void;
             public inactiveBodies(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4248,7 +4317,7 @@ declare module zpp_nape{
             public inactiveBodies(): void;
             public setup_a1(): void;
             public setup_a2(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4314,7 +4383,7 @@ declare module zpp_nape{
             public setup_a2(): void;
             public setup_a3(): void;
             public setup_a4(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4345,7 +4414,7 @@ declare module zpp_nape{
             public bodyImpulse(b: zpp_nape.phys.ZPP_Body): nape.geom.Vec3;
             public activeBodies(): void;
             public inactiveBodies(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4403,7 +4472,7 @@ declare module zpp_nape{
             public inactiveBodies(): void;
             public setup_a1(): void;
             public setup_a2(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.constraint.Constraint;
+            public copy(dict?: any[], todo?: any[]): nape.constraint.Constraint;
             public validate(): void;
             public wake_connected(): void;
             public forest(): void;
@@ -4449,14 +4518,14 @@ declare module zpp_nape{
             public colarb: zpp_nape.dynamics.ZPP_ColArbiter;
             public fluidarb: zpp_nape.dynamics.ZPP_FluidArbiter;
             public sensorarb: zpp_nape.dynamics.ZPP_SensorArbiter;
-            public lazyRetire: (s: zpp_nape.space.ZPP_Space, b: zpp_nape.phys.ZPP_Body) => void;
+            public lazyRetire: (s: zpp_nape.space.ZPP_Space, b?: zpp_nape.phys.ZPP_Body) => void;
             public sup_assign: (s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, id: number, di: number) => void;
             public sup_retire: () => void;
             public static internal: boolean;
             public static COL: number;
             public static FLUID: number;
             public static SENSOR: number;
-            public static types: Array<any>;
+            public static types: any[];
             public wrapper(): nape.dynamics.Arbiter;
             constructor();
         }
@@ -4553,7 +4622,7 @@ declare module zpp_nape{
             public alloc: () => void;
             public free: () => void;
             public stat: boolean;
-            public injectContact: (px: number, py: number, nx: number, ny: number, dist: number, hash: number, posOnly: boolean) => zpp_nape.dynamics.ZPP_Contact;
+            public injectContact: (px: number, py: number, nx: number, ny: number, dist: number, hash: number, posOnly?: boolean) => zpp_nape.dynamics.ZPP_Contact;
             public assign: (s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, id: number, di: number) => void;
             public calcProperties: () => void;
             public validate_props: () => void;
@@ -4723,7 +4792,7 @@ declare module zpp_nape{
             public addGroup: (group: zpp_nape.dynamics.ZPP_InteractionGroup) => void;
             public remGroup: (group: zpp_nape.dynamics.ZPP_InteractionGroup) => void;
             public addInteractor: (intx: zpp_nape.phys.ZPP_Interactor) => void;
-            public remInteractor: (intx: zpp_nape.phys.ZPP_Interactor, flag: number) => void;
+            public remInteractor: (intx: zpp_nape.phys.ZPP_Interactor, flag?: number) => void;
             public static SHAPE: number;
             public static BODY: number;
             public setGroup(group: zpp_nape.dynamics.ZPP_InteractionGroup): void;
@@ -4734,7 +4803,7 @@ declare module zpp_nape{
             public space: zpp_nape.space.ZPP_Space;
             public _length: number;
             public zip_length: boolean;
-            public lengths: Array<any>;
+            public lengths: any[];
             public ite_0: zpp_nape.util.ZNPNode_ZPP_ColArbiter;
             public ite_1: zpp_nape.util.ZNPNode_ZPP_ColArbiter;
             public ite_2: zpp_nape.util.ZNPNode_ZPP_FluidArbiter;
@@ -4800,8 +4869,18 @@ declare module zpp_nape{
         export class ZPP_Collide {
             public static flowpoly: zpp_nape.util.ZNPList_ZPP_Vec2;
             public static flowsegs: zpp_nape.util.ZNPList_ZPP_Vec2;
+            public static circleContains(c: zpp_nape.shape.ZPP_Circle, p: zpp_nape.geom.ZPP_Vec2): boolean;
+            public static polyContains(s: zpp_nape.shape.ZPP_Polygon, p: zpp_nape.geom.ZPP_Vec2): boolean;
+            public static shapeContains(s: zpp_nape.shape.ZPP_Shape, p: zpp_nape.geom.ZPP_Vec2): boolean;
+            public static bodyContains(b: zpp_nape.phys.ZPP_Body, p: zpp_nape.geom.ZPP_Vec2): boolean;
+            public static containTest(s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape): boolean;
+            public static contactCollide(s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, arb: zpp_nape.dynamics.ZPP_ColArbiter, rev: boolean): boolean;
+            public static testCollide_safe(s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape): boolean;
+            public static testCollide(s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape): boolean;
+            public static flowCollide(s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, arb: zpp_nape.dynamics.ZPP_FluidArbiter): boolean;
         }
         export class ZPP_Convex {
+            public static optimise(P: zpp_nape.geom.ZPP_PartitionedPoly): void;
         }
         export class ZPP_ConvexRayResult {
             public normal: nape.geom.Vec2;
@@ -4814,6 +4893,8 @@ declare module zpp_nape{
             public toiDistance: number;
             public disposed: () => void;
             public static internal: boolean;
+            public static getRay(normal: nape.geom.Vec2, time: number, inner: boolean, shape: nape.shape.Shape): nape.geom.RayResult;
+            public static getConvex(normal: nape.geom.Vec2, position: nape.geom.Vec2, toiDistance: number, shape: nape.shape.Shape): nape.geom.ConvexResult;
             public free(): void;
             constructor();
         }
@@ -4846,12 +4927,14 @@ declare module zpp_nape{
             public alloc: () => void;
             public free: () => void;
             public static zpp_pool: zpp_nape.geom.ZPP_CutInt;
-            public static get: (time: number, end: zpp_nape.geom.ZPP_GeomVert, start: zpp_nape.geom.ZPP_GeomVert, path0: zpp_nape.geom.ZPP_CutVert, path1: zpp_nape.geom.ZPP_CutVert, virtualint: boolean, vertex: boolean) => zpp_nape.geom.ZPP_CutInt;
+            public static get: (time: number, end?: zpp_nape.geom.ZPP_GeomVert, start?: zpp_nape.geom.ZPP_GeomVert, path0?: zpp_nape.geom.ZPP_CutVert, path1?: zpp_nape.geom.ZPP_CutVert, virtualint?: boolean, vertex?: boolean) => zpp_nape.geom.ZPP_CutInt;
             constructor();
         }
         export class ZPP_Cutter {
+            public static run(P: zpp_nape.geom.ZPP_GeomVert, _start: nape.geom.Vec2, _end: nape.geom.Vec2, bstart: boolean, bend: boolean, output: nape.geom.GeomPolyList): nape.geom.GeomPolyList;
         }
         export class ZPP_Geom {
+            public static validateShape(s: zpp_nape.shape.ZPP_Shape): void;
         }
         export class ZPP_GeomVert {
             public x: number;
@@ -4885,6 +4968,7 @@ declare module zpp_nape{
             public alloc: () => void;
             public static zpp_pool: zpp_nape.geom.ZPP_GeomVertexIterator;
             public static internal: boolean;
+            public static get(poly: zpp_nape.geom.ZPP_GeomVert, forward: boolean): nape.geom.GeomVertexIterator;
         }
         export class ZPP_MarchSpan {
             public parent: zpp_nape.geom.ZPP_MarchSpan;
@@ -4917,7 +5001,8 @@ declare module zpp_nape{
             constructor();
         }
         export class ZPP_MarchingSquares {
-            public static look_march: Array<any>;
+            public static look_march: any[];
+            public static run(iso: nape.geom.IsoFunctionDef, bx0: number, by0: number, bx1: number, by1: number, cell: nape.geom.Vec2, quality: number, combine: boolean, ret: nape.geom.GeomPolyList): void;
         }
         export class ZPP_Mat23 {
             public outer: nape.geom.Mat23;
@@ -4934,6 +5019,8 @@ declare module zpp_nape{
             public free: () => void;
             public alloc: () => void;
             public static zpp_pool: zpp_nape.geom.ZPP_Mat23;
+            public static get(): zpp_nape.geom.ZPP_Mat23;
+            public static identity(): zpp_nape.geom.ZPP_Mat23;
             public wrapper(): nape.geom.Mat23;
             public setas(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
             constructor();
@@ -4948,6 +5035,8 @@ declare module zpp_nape{
         export class ZPP_Monotone {
             public static sharedPPoly: zpp_nape.geom.ZPP_PartitionedPoly;
             public static getShared: () => zpp_nape.geom.ZPP_PartitionedPoly;
+            public static isMonotone(P: zpp_nape.geom.ZPP_GeomVert): boolean;
+            public static decompose(P: zpp_nape.geom.ZPP_GeomVert, poly?: zpp_nape.geom.ZPP_PartitionedPoly): zpp_nape.geom.ZPP_PartitionedPoly;
         }
         export class ZPP_PartitionVertex {
             public id: number;
@@ -4967,6 +5056,9 @@ declare module zpp_nape{
             public node: zpp_nape.util.ZPP_Set_ZPP_PartitionVertex;
             public static zpp_pool: zpp_nape.geom.ZPP_PartitionVertex;
             public static get: (x: zpp_nape.geom.ZPP_GeomVert) => zpp_nape.geom.ZPP_PartitionVertex;
+            public static vert_lt(edge: zpp_nape.geom.ZPP_PartitionVertex, vert: zpp_nape.geom.ZPP_PartitionVertex): boolean;
+            public static edge_swap(p: zpp_nape.geom.ZPP_PartitionVertex, q: zpp_nape.geom.ZPP_PartitionVertex): void;
+            public static edge_lt(p: zpp_nape.geom.ZPP_PartitionVertex, q: zpp_nape.geom.ZPP_PartitionVertex): boolean;
             public sort(): void;
             constructor();
         }
@@ -5027,6 +5119,8 @@ declare module zpp_nape{
             public alloc: () => void;
             public static zpp_pool: zpp_nape.geom.ZPP_SimpleVert;
             public static get: (x: number, y: number) => zpp_nape.geom.ZPP_SimpleVert;
+            public static less_xy(p: zpp_nape.geom.ZPP_SimpleVert, q: zpp_nape.geom.ZPP_SimpleVert): boolean;
+            public static swap_nodes(p: zpp_nape.geom.ZPP_SimpleVert, q: zpp_nape.geom.ZPP_SimpleVert): void;
         }
         export class ZPP_SimpleSeg {
             public left: zpp_nape.geom.ZPP_SimpleVert;
@@ -5039,6 +5133,7 @@ declare module zpp_nape{
             public prev: zpp_nape.geom.ZPP_SimpleSeg;
             public node: zpp_nape.util.ZPP_Set_ZPP_SimpleSeg;
             public static zpp_pool: zpp_nape.geom.ZPP_SimpleSeg;
+            public static get(left: zpp_nape.geom.ZPP_SimpleVert, right: zpp_nape.geom.ZPP_SimpleVert): zpp_nape.geom.ZPP_SimpleSeg;
             public less_xy(a: zpp_nape.geom.ZPP_SimpleVert, b: zpp_nape.geom.ZPP_SimpleVert): boolean;
         }
         export class ZPP_SimpleEvent {
@@ -5052,6 +5147,8 @@ declare module zpp_nape{
             public alloc: () => void;
             public static zpp_pool: zpp_nape.geom.ZPP_SimpleEvent;
             public static get: (v: zpp_nape.geom.ZPP_SimpleVert) => zpp_nape.geom.ZPP_SimpleEvent;
+            public static swap_nodes(a: zpp_nape.geom.ZPP_SimpleEvent, b: zpp_nape.geom.ZPP_SimpleEvent): void;
+            public static less_xy(a: zpp_nape.geom.ZPP_SimpleEvent, b: zpp_nape.geom.ZPP_SimpleEvent): boolean;
         }
         export class ZPP_SimpleSweep {
             public sweepx: number;
@@ -5066,6 +5163,9 @@ declare module zpp_nape{
             constructor();
         }
         export class ZPP_Simple {
+            public static decompose(poly: zpp_nape.geom.ZPP_GeomVert, rets?: zpp_nape.util.ZNPList_ZPP_GeomVert): zpp_nape.util.ZNPList_ZPP_GeomVert;
+            public static clip_polygon(vertices: zpp_nape.util.ZPP_Set_ZPP_SimpleVert, rets: zpp_nape.util.ZNPList_ZPP_GeomVert): void;
+            public static isSimple(poly: zpp_nape.geom.ZPP_GeomVert): boolean;
         }
         export class ZPP_SimplifyV {
             public x: number;
@@ -5093,6 +5193,8 @@ declare module zpp_nape{
         export class ZPP_Simplify {
             public static lessval: (a: zpp_nape.geom.ZPP_SimplifyV, b: zpp_nape.geom.ZPP_SimplifyV) => number;
             public static less: (a: zpp_nape.geom.ZPP_SimplifyV, b: zpp_nape.geom.ZPP_SimplifyV) => boolean;
+            public static distance(v: zpp_nape.geom.ZPP_SimplifyV, a: zpp_nape.geom.ZPP_SimplifyV, b: zpp_nape.geom.ZPP_SimplifyV): number;
+            public static simplify(P: zpp_nape.geom.ZPP_GeomVert, epsilon: number): zpp_nape.geom.ZPP_GeomVert;
         }
         export class ZPP_ToiEvent {
             public next: zpp_nape.geom.ZPP_ToiEvent;
@@ -5114,7 +5216,10 @@ declare module zpp_nape{
             constructor();
         }
         export class ZPP_SweepDistance {
-            public static distance: (s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, w1: zpp_nape.geom.ZPP_Vec2, w2: zpp_nape.geom.ZPP_Vec2, axis: zpp_nape.geom.ZPP_Vec2, upperBound: number) => number;
+            public static distance: (s1: zpp_nape.shape.ZPP_Shape, s2: zpp_nape.shape.ZPP_Shape, w1: zpp_nape.geom.ZPP_Vec2, w2: zpp_nape.geom.ZPP_Vec2, axis: zpp_nape.geom.ZPP_Vec2, upperBound?: number) => number;
+            public static dynamicSweep(toi: zpp_nape.geom.ZPP_ToiEvent, timeStep: number, lowerBound: number, negRadius: number, userAPI?: boolean): void;
+            public static staticSweep(toi: zpp_nape.geom.ZPP_ToiEvent, timeStep: number, lowerBound: number, negRadius: number): void;
+            public static distanceBody(b1: zpp_nape.phys.ZPP_Body, b2: zpp_nape.phys.ZPP_Body, w1: zpp_nape.geom.ZPP_Vec2, w2: zpp_nape.geom.ZPP_Vec2): number;
         }
         export class ZPP_PartitionPair {
             public next: zpp_nape.geom.ZPP_PartitionPair;
@@ -5146,6 +5251,8 @@ declare module zpp_nape{
             public node: zpp_nape.util.ZPP_Set_ZPP_PartitionPair;
             public static zpp_pool: zpp_nape.geom.ZPP_PartitionPair;
             public static get: (a: zpp_nape.geom.ZPP_PartitionVertex, b: zpp_nape.geom.ZPP_PartitionVertex) => zpp_nape.geom.ZPP_PartitionPair;
+            public static edge_swap(a: zpp_nape.geom.ZPP_PartitionPair, b: zpp_nape.geom.ZPP_PartitionPair): void;
+            public static edge_lt(a: zpp_nape.geom.ZPP_PartitionPair, b: zpp_nape.geom.ZPP_PartitionPair): boolean;
             public add(o: zpp_nape.geom.ZPP_PartitionPair): zpp_nape.geom.ZPP_PartitionPair;
             public addAll(x: zpp_nape.geom.ZPP_PartitionPair): void;
             public insert(cur: zpp_nape.geom.ZPP_PartitionPair, o: zpp_nape.geom.ZPP_PartitionPair): zpp_nape.geom.ZPP_PartitionPair;
@@ -5164,6 +5271,9 @@ declare module zpp_nape{
             constructor();
         }
         export class ZPP_Triangular {
+            public static delaunay(A: zpp_nape.geom.ZPP_PartitionVertex, B: zpp_nape.geom.ZPP_PartitionVertex, C: zpp_nape.geom.ZPP_PartitionVertex, D: zpp_nape.geom.ZPP_PartitionVertex): boolean;
+            public static optimise(P: zpp_nape.geom.ZPP_PartitionedPoly): void;
+            public static triangulate(P: zpp_nape.geom.ZPP_PartitionedPoly): zpp_nape.geom.ZPP_PartitionedPoly;
         }
         export class ZPP_Vec2 {
             public _invalidate: (__0: zpp_nape.geom.ZPP_Vec2) => void;
@@ -5202,7 +5312,7 @@ declare module zpp_nape{
             public y: number;
             public copy: () => zpp_nape.geom.ZPP_Vec2;
             public static zpp_pool: zpp_nape.geom.ZPP_Vec2;
-            public static get: (x: number, y: number, immutable: boolean) => zpp_nape.geom.ZPP_Vec2;
+            public static get: (x: number, y: number, immutable?: boolean) => zpp_nape.geom.ZPP_Vec2;
             public add(o: zpp_nape.geom.ZPP_Vec2): zpp_nape.geom.ZPP_Vec2;
             public addAll(x: zpp_nape.geom.ZPP_Vec2): void;
             public insert(cur: zpp_nape.geom.ZPP_Vec2, o: zpp_nape.geom.ZPP_Vec2): zpp_nape.geom.ZPP_Vec2;
@@ -5255,6 +5365,7 @@ declare module zpp_nape{
             public wrap_cbTypes: nape.callbacks.CbTypeList;
             public lookup_group: () => zpp_nape.dynamics.ZPP_InteractionGroup;
             public static int_callback: (set: zpp_nape.space.ZPP_CallbackSet, x: zpp_nape.callbacks.ZPP_InteractionListener, cb: zpp_nape.callbacks.ZPP_Callback) => void;
+            public static get(i1: zpp_nape.phys.ZPP_Interactor, i2: zpp_nape.phys.ZPP_Interactor): zpp_nape.space.ZPP_CallbackSet;
             public __iaddedToSpace(): void;
             public __iremovedFromSpace(): void;
             public wake(): void;
@@ -5360,7 +5471,8 @@ declare module zpp_nape{
             public invalidate_localCOM: () => void;
             public invalidate_worldCOM: () => void;
             public __immutable_midstep: (name: String) => void;
-            public static types: Array<any>;
+            public static types: any[];
+            public static __static(): nape.phys.Body;
             public invalidate_type(): void;
             public invalidate_shapes(): void;
             public connectedBodies(depth: number, output: nape.phys.BodyList): nape.phys.BodyList;
@@ -5406,7 +5518,7 @@ declare module zpp_nape{
             public addedToSpace(): void;
             public removedFromSpace(): void;
             public breakApart(): void;
-            public copy(dict?: Array<any>, todo?: Array<any>): nape.phys.Compound;
+            public copy(dict?: any[], todo?: any[]): nape.phys.Compound;
             constructor();
         }
         export class ZPP_FluidProperties {
@@ -5502,7 +5614,7 @@ declare module zpp_nape{
             public invalidate_aabb: () => void;
             public validate_localCOM: () => void;
             public validate_worldCOM: () => void;
-            public static types: Array<any>;
+            public static types: any[];
             public validate_sweepRadius(): void;
             public clear(): void;
             public validate_area_inertia(): void;
@@ -5823,6 +5935,7 @@ declare module zpp_nape{
             public really_empty: () => boolean;
             public sleeping: () => boolean;
             public static zpp_pool: zpp_nape.space.ZPP_CallbackSet;
+            public static get(i1: zpp_nape.phys.ZPP_Interactor, i2: zpp_nape.phys.ZPP_Interactor): zpp_nape.space.ZPP_CallbackSet;
             public add(o: zpp_nape.space.ZPP_CallbackSet): zpp_nape.space.ZPP_CallbackSet;
             public addAll(x: zpp_nape.space.ZPP_CallbackSet): void;
             public insert(cur: zpp_nape.space.ZPP_CallbackSet, o: zpp_nape.space.ZPP_CallbackSet): zpp_nape.space.ZPP_CallbackSet;
@@ -5893,7 +6006,7 @@ declare module zpp_nape{
             public cbsets: zpp_nape.space.ZPP_CbSetManager;
             public revoke_listener: (x: zpp_nape.callbacks.ZPP_InteractionListener) => void;
             public unrevoke_listener: (x: zpp_nape.callbacks.ZPP_InteractionListener) => void;
-            public added_shape: (s: zpp_nape.shape.ZPP_Shape, dontwake: boolean) => void;
+            public added_shape: (s: zpp_nape.shape.ZPP_Shape, dontwake?: boolean) => void;
             public pre_dt: number;
             public toiEvents: zpp_nape.util.ZNPList_ZPP_ToiEvent;
             public continuous: boolean;
@@ -6010,5 +6123,14 @@ declare module zpp_nape{
         public static _ZPP_SimpleSeg: number;
         public static _Space: number;
         public static _InteractionGroup: number;
+        public static Constraint(): number;
+        public static Interactor(): number;
+        public static CbType(): number;
+        public static CbSet(): number;
+        public static Listener(): number;
+        public static ZPP_SimpleVert(): number;
+        public static ZPP_SimpleSeg(): number;
+        public static Space(): number;
+        public static InteractionGroup(): number;
     }
 }
