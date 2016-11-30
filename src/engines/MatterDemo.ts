@@ -145,9 +145,9 @@ namespace engines
 		{
 			throw new Error('MatterJs does not have the concept of shapes. createBody method not supported.');
 		}
-		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
+		protected createBox(x:number, y:number, width:number, height:number, pinned?:boolean)
 		{
-			var body = this.pinBody(Bodies.rectangle(x, y, radius * 2, radius * 2), pinned);
+			var body = this.pinBody(Bodies.rectangle(x, y, width * 2, height * 2), pinned);
 			World.add(this.world, body);
 			return body;
 		}
@@ -156,6 +156,11 @@ namespace engines
 			var body = this.pinBody(Bodies.circle(x, y, radius), pinned);
 			World.add(this.world, body);
 			return body;
+		}
+
+		protected createFromData(x:number, y:number, data:any)
+		{
+
 		}
 
 		public static globalToLocal(body:Body, worldPoint:Vector, out:Vector = null)

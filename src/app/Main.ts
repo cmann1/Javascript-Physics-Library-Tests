@@ -30,6 +30,7 @@ namespace app
 		private static readonly DEMO_NAMES = [
 			'Basic',
 			'Constraints',
+			'Ragdolls',
 			'Stress',
 		];
 
@@ -43,7 +44,7 @@ namespace app
 		private engines:DemoEngineBase[] = [];
 		private engineIndex = -1;
 		private currentEngine:DemoEngineBase;
-		private currentDemo:number = 0;
+		private currentDemo:number = 2;
 
 		private ticker:Ticker;
 
@@ -215,7 +216,7 @@ namespace app
 
 		private onCanvasMouseDown = (event) =>
 		{
-			this.currentEngine.onMouseDown(event);
+			this.currentEngine.handleMouseDown(event);
 
 			if(event.button == 2)
 			{
@@ -225,7 +226,7 @@ namespace app
 
 		private onCanvasMouseUp = (event) =>
 		{
-			this.currentEngine.onMouseUp(event);
+			this.currentEngine.handleMouseUp(event);
 		};
 
 		private onWindowBlur = () =>
@@ -270,7 +271,7 @@ namespace app
 			this.engines.push(new P2JsDemo(this.canvas, frameRate));
 			this.engines.push(new MatterDemo(this.canvas, frameRate));
 			this.engines.push(new PhysicsJsDemo(this.canvas, frameRate));
-			this.loadEngine(0);
+			this.loadEngine(1);
 			// this.loadEngine(this.engines.length - 1);
 
 			$(window)

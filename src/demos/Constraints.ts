@@ -99,8 +99,8 @@ namespace demos
 			};
 
 			withCell.call(this, 1, 0, "PivotJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var pivotPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
 				format(new PivotJoint(
@@ -112,8 +112,8 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var weldPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
 				format(new WeldJoint(
@@ -126,8 +126,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size,size);
 
 				format(new DistanceJoint(
 					b1, b2,
@@ -139,8 +139,8 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var anchorPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
 				format(new LineJoint(
@@ -155,11 +155,11 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 1, "PulleyJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(cellWidth/2),y(size),size/2, true);
+				var b1:Body = this.createBox(x(cellWidth/2),y(size),size/2,size/2, true);
 				b1.scaleShapes(4, 1);
 
-				var b2:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size/2);
-				var b3:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b2:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size/2,size/2);
+				var b3:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				format(new PulleyJoint(
 					b1, b2,
@@ -173,8 +173,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 2, "AngleJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size, true);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size, true);
 
 				format(new AngleJoint(
 					b1, b2,
@@ -185,8 +185,8 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 2, "MotorJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size, true);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size, true);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size, true);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size, true);
 
 				format(new MotorJoint(
 					b1, b2,
@@ -196,8 +196,8 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 2, "PrismaticJoint\n(LineJoint + AngleJoint)", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var anchorPoint:Vec2 = Vec2.get(x(cellWidth/2),y(cellHeight/2));
 				format(new LineJoint(
@@ -278,8 +278,8 @@ namespace demos
 			};
 
 			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
-				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var pivotPoint:b2Vec2 = new b2Vec2(x(cellWidth/2),y(cellHeight/2));
 				var jointDef:b2RevoluteJointDef = format(new b2RevoluteJointDef());
@@ -288,8 +288,8 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 0, "WeldJoint", (x:Function, y:Function) => {
-				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var weldPoint:b2Vec2 = new b2Vec2(x(cellWidth/2),y(cellHeight/2));
 				var jointDef:b2WeldJointDef = format(new b2WeldJointDef());
@@ -299,8 +299,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
-				var b1:b2Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size);
-				var b2:b2Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size);
+				var b1:b2Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:b2Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size,size);
 
 				var jointDef:b2DistanceJointDef = format(new b2DistanceJointDef());
 				var a1:b2Vec2 = b1.GetWorldCenter().Copy();
@@ -317,8 +317,8 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 1, "LineJoint", (x:Function, y:Function) => {
-				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var anchorPoint:b2Vec2 = new b2Vec2(x(cellWidth/2),y(cellHeight/2));
 				var jointDef:b2LineJointDef = format(new b2LineJointDef());
@@ -333,8 +333,8 @@ namespace demos
 				var b1x = x(cellWidth/2);
 				var b1y = y(size);
 
-				var b2:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size/2);
-				var b3:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b2:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size/2,size/2);
+				var b3:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var a2:b2Vec2 = b2.GetWorldCenter().Copy();
 				a2.Add(new b2Vec2(0, -size/2));
@@ -362,7 +362,7 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function) => {
-				var b2:b2Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size, true);
+				var b2:b2Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size,size, true);
 				var joint:b2RevoluteJoint = <b2RevoluteJoint> b2.GetJointList().joint;
 				joint.EnableMotor(true);
 				joint.SetMaxMotorTorque(50);
@@ -370,8 +370,8 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
-				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:b2Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:b2Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var jointDef:b2PrismaticJointDef = new b2PrismaticJointDef();
 				jointDef.Initialize(b1, b2, b2.GetWorldCenter(), new b2Vec2(0,1));
@@ -425,8 +425,8 @@ namespace demos
 			}
 
 			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var pivotPoint = [x(cellWidth/2),y(cellHeight/2)];
 				var joint:RevoluteConstraint = new RevoluteConstraint(b1, b2, {worldPivot: pivotPoint});
@@ -435,9 +435,9 @@ namespace demos
 
 			withCell.call(this, 2, 0, "LockJoint", (x:Function, y:Function) => {
 				const a = Math.PI/4;
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
 				b1.angle = a * 1.5;
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 				b2.angle = -Math.PI + a * 0.5;
 
 				var weldPoint = [x(cellWidth/2),y(cellHeight/2)];
@@ -447,8 +447,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1.25*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(1.75*cellWidth/3),y(cellHeight/2),size,size);
 
 				var joint = new DistanceConstraint(b1, b2, {
 					distance: cellWidth/3*0.75 * WORLD_SCALE,
@@ -463,8 +463,8 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 1, "LineJoint\n(PrismaticJoint/disableRotationalLock)", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var anchorPoint = [x(cellWidth/2),y(cellHeight/2)];
 				var localA = [];
@@ -498,7 +498,7 @@ namespace demos
 			});
 
 			withCell.call(this, 1, 2, "RevoluteJoint Motor", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size, true);
+				var b1:Body = this.createBox(x(cellWidth/2),y(cellHeight/2),size,size, true);
 
 				var joint:RevoluteConstraint = (<any>b1)._pin;
 				joint.enableMotor();
@@ -506,8 +506,8 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 2, "PrismaticJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var anchorPoint = [x(cellWidth/2),y(cellHeight/2)];
 				var localA = [];
@@ -562,8 +562,8 @@ namespace demos
 			}
 
 			withCell.call(this, 1, 0, "RevoluteJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var pivotPointA = Vector.create(x(cellWidth/2 - 1),y(cellHeight/2));
 				var pivotPointB = Vector.create(x(cellWidth/2 + 1),y(cellHeight/2));
@@ -584,8 +584,8 @@ namespace demos
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
-				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:Body = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:Body = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				var joint = Constraint.create({
 					bodyA: b1,
@@ -664,16 +664,16 @@ namespace demos
 			});
 
 			withCell.call(this, 2, 0, "AngleJoint", (x:Function, y:Function) => {
-				var b1:PhysicsBody = this.createBox(x(1*cellWidth/4),y(cellHeight/3),size);
-				var b2:PhysicsBody = this.createBox(x(3*cellWidth/4),y(cellHeight/3),size);
-				var b3:PhysicsBody = this.createBox(x(cellWidth/2),y(cellHeight/1.5),size);
+				var b1:PhysicsBody = this.createBox(x(1*cellWidth/4),y(cellHeight/3),size,size);
+				var b2:PhysicsBody = this.createBox(x(3*cellWidth/4),y(cellHeight/3),size,size);
+				var b3:PhysicsBody = this.createBox(x(cellWidth/2),y(cellHeight/1.5),size,size);
 
 				this.constraints.angleConstraint(b1, b2, b3);
 			});
 
 			withCell.call(this, 0, 1, "DistanceJoint", (x:Function, y:Function) => {
-				var b1:PhysicsBody = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size);
-				var b2:PhysicsBody = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size);
+				var b1:PhysicsBody = this.createBox(x(1*cellWidth/3),y(cellHeight/2),size,size);
+				var b2:PhysicsBody = this.createBox(x(2*cellWidth/3),y(cellHeight/2),size,size);
 
 				this.constraints.distanceConstraint(b1, b2);
 

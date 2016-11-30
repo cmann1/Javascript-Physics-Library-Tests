@@ -8,6 +8,9 @@
 namespace demos
 {
 
+	import DemoEngineBase = engines.DemoEngineBase;
+	import VertFormat = engines.VertFormat;
+
 	const VELOCITY_ITERATIONS = 10;
 	const POSITION_ITERATIONS = 10;
 

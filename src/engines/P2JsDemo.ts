@@ -392,13 +392,18 @@ namespace engines
 
 			return this.pinBody(body, pinned);
 		}
-		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
+		protected createBox(x:number, y:number, width:number, height:number, pinned?:boolean):Body
 		{
-			return this.createBody(x, y, new Box(<any>{width: radius*2, height: radius*2}), pinned);
+			return this.createBody(x, y, new Box(<any>{width: width*2, height: height*2}), pinned);
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean):Body
 		{
 			return this.createBody(x, y, new Circle({radius: radius}), pinned);
+		}
+
+		protected createFromData(x:number, y:number, data:any)
+		{
+
 		}
 
 		/*
@@ -410,7 +415,7 @@ namespace engines
 			(this.world.solver as GSSolver).iterations = iterations;
 		}
 
-		onMouseDown = (event) =>
+		onMouseDown ()
 		{
 			const p = [this.mouseX * this.worldScale, this.mouseY * this.worldScale];
 			var result = this.world.hitTest(p, this.world.bodies, this.pickPrecision);
@@ -436,17 +441,18 @@ namespace engines
 					maxForce: 2500
 				});
 				this.world.addConstraint(this.handJoint);
+				this.mouseAction = MouseAction.Handled;
 			}
-		};
+		}
 
-		onMouseUp = (event) =>
+		onMouseUp()
 		{
 			if(this.handJoint)
 			{
 				this.world.removeConstraint(this.handJoint);
 				this.handJoint = null;
 			}
-		};
+		}
 
 		/*
 		 *** Utility Methods

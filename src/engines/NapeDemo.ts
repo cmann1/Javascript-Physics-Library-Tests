@@ -139,13 +139,18 @@ namespace engines
 
 			return this.pinBody(body, pinned);
 		}
-		protected createBox(x:number, y:number, radius:number, pinned?:boolean):Body
+		protected createBox(x:number, y:number, width:number, height:number, pinned?:boolean):Body
 		{
-			return this.createBody(x, y, new Polygon(Polygon.box(radius*2, radius*2)), pinned);
+			return this.createBody(x, y, new Polygon(Polygon.box(width*2, height*2)), pinned);
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean):Body
 		{
 			return this.createBody(x, y, new Circle(radius), pinned);
+		}
+
+		protected createFromData(x:number, y:number, data:any)
+		{
+
 		}
 
 		/*
@@ -158,7 +163,7 @@ namespace engines
 			this.stage.update();
 		}
 
-		onMouseDown = (event) =>
+		onMouseDown()
 		{
 			// Allocate a Vec2 from object pool.
 			var mousePoint:Vec2 = Vec2.get(this.mouseX, this.mouseY, false);
@@ -193,7 +198,7 @@ namespace engines
 			mousePoint.dispose();
 		};
 
-		onMouseUp = (event) =>
+		onMouseUp()
 		{
 			// Disable hand joint (if not already disabled).
 			this.handJoint.active = false;

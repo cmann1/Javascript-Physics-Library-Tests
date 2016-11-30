@@ -132,6 +132,7 @@ namespace engines
 		loadDemoBasic:() => void;
 		loadDemoStress:() => void;
 		loadDemoConstraints:() => void;
+		loadDemoRagdolls:() => void;
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
@@ -231,21 +232,132 @@ namespace engines
 
 			return this.pinBody(body, pinned);
 		}
-		protected createBox(x:number, y:number, radius:number, pinned?:boolean):b2Body
+		protected createBox(x:number, y:number, width:number, height:number, pinned?:boolean):b2Body
 		{
-			radius *= 2 * 0.5;
-			return this.createBody(x, y, b2PolygonShape.AsBox(radius, radius), pinned);
+			width *= 2 * 0.5;
+			height *= 2 * 0.5;
+			return this.createBody(x, y, b2PolygonShape.AsBox(width, height), pinned);
 		}
 		protected createCircle(x:number, y:number, radius:number, pinned?:boolean):b2Body
 		{
 			return this.createBody(x, y, new b2CircleShape(radius), pinned);
 		}
 
+		protected createFromData(x:number, y:number, data:any)
+		{
+			const WORLD_SCALE = this.worldScale;
+			const DEG2RAD = 1 / (180 / Math.PI);
+
+			const bodiesData = data.bodies;
+			const jointsData = data.joints;
+			const bodyRegistry:{[id:string]:b2Body} = {};
+
+			const bodyDef:b2BodyDef = new b2BodyDef();
+
+			x *= WORLD_SCALE;
+			y *= WORLD_SCALE;
+
+			if(bodiesData)
+			for(let bodyData of bodiesData)
+			{
+				if(bodyData.type === undefined || bodyData.type === 'dynamic')
+					bodyDef.type = b2Body.b2_dynamicBody;
+				else if(bodyData.type === 'static')
+					bodyDef.type = b2Body.b2_staticBody;
+				else if(bodyData.type === 'kinematic')
+					bodyDef.type = b2Body.b2_kinematicBody;
+
+				bodyDef.position.Set(x + bodyData.x * WORLD_SCALE, y + bodyData.y * WORLD_SCALE);
+
+				var body:b2Body = this.world.CreateBody(bodyDef);
+				if(bodyData.id !== undefined)
+				{
+					bodyRegistry[bodyData.id] = body;
+				}
+
+				if(bodyData.shape)
+				{
+					const shapeData = bodyData.shape;
+					const shapeType = shapeData.type;
+					var fixtureDef:b2FixtureDef = new b2FixtureDef();
+
+					if(shapeType === 'box')
+						fixtureDef.shape = b2PolygonShape.AsBox(shapeData.width * 0.5 * WORLD_SCALE, shapeData.height * 0.5 * WORLD_SCALE);
+					else if(shapeType === 'circle')
+						fixtureDef.shape = new b2CircleShape(shapeData.radius * WORLD_SCALE);
+					else
+						console.error(`Unsupported shape type "${shapeType}"`);
+
+					if(shapeData.density !== undefined)
+						fixtureDef.density = shapeData.density;
+					if(shapeData.friction !== undefined)
+						fixtureDef.friction = shapeData.friction;
+					if(shapeData.restitution !== undefined)
+						fixtureDef.restitution = shapeData.restitution;
+
+					body.CreateFixture(fixtureDef);
+				}
+
+				if(bodyData.impulse)
+				{
+					let impulse:b2Vec2;
+
+					if(bodyData.impulse instanceof b2Vec2)
+					{
+						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse instanceof Function)
+					{
+						let impulseData = bodyData.impulse();
+						impulse = new b2Vec2(impulseData[0], impulseData[1]);
+					}
+
+					if(impulse)
+						body.ApplyImpulse(impulse, body.GetWorldCenter());
+				}
+			}
+
+			if(jointsData)
+			for(let jointData of jointsData)
+			{
+				const type = jointData.type;
+				const body1 = bodyRegistry[jointData.body1];
+				const body2 = bodyRegistry[jointData.body2];
+
+				if(!body1 || !body2)
+				{
+					console.error(`Cannot find body with id "${!body1 ? jointData.body1 : jointData.body2}"`);
+					continue;
+				}
+
+				if(type == 'revolute')
+				{
+					let jointDef:b2RevoluteJointDef = new b2RevoluteJointDef();
+
+					if(jointData.lowerLimit != undefined || jointData.upperLimit != undefined)
+					{
+						jointDef.enableLimit = true;
+						if(jointData.lowerLimit != undefined)
+							jointDef.lowerAngle = jointData.lowerLimit * DEG2RAD;
+						if(jointData.upperLimit != undefined)
+							jointDef.upperAngle = jointData.upperLimit * DEG2RAD;
+					}
+
+					jointDef.Initialize(body1, body2, new b2Vec2(x + jointData.worldAnchorX * WORLD_SCALE, y + jointData.worldAnchorY * WORLD_SCALE));
+					this.world.CreateJoint(jointDef);
+				}
+				else
+				{
+					console.error(`Unsupported joint type "${type}"`);
+				}
+			}
+		}
+
 		/*
 		 *** Events
 		 */
 
-		onMouseDown = () =>
+		onMouseDown()
 		{
 			var body = this.getBodyAtMouse();
 
@@ -265,17 +377,18 @@ namespace engines
 				this.mouseJoint = <b2MouseJoint> this.world.CreateJoint(def);
 
 				body.SetAwake(true);
+				this.mouseAction = MouseAction.Handled;
 			}
-		};
+		}
 
-		onMouseUp = () =>
+		onMouseUp()
 		{
 			if(this.mouseJoint)
 			{
 				this.world.DestroyJoint(this.mouseJoint);
 				this.mouseJoint = null;
 			}
-		};
+		}
 
 	}
 

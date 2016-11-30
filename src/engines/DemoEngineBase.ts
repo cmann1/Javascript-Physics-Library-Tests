@@ -13,6 +13,12 @@ namespace engines
 		Vector
 	}
 
+	export enum MouseAction
+	{
+		Idle,
+		Handled
+	}
+
 	export interface IVertex
 	{
 		new (x:number, y:number);
@@ -56,6 +62,9 @@ namespace engines
 
 		protected overlays:Overlay[];
 
+		protected demoMouseDownHook:() => void;
+		protected mouseAction:MouseAction;
+
 		constructor(canvas:HTMLCanvasElement, frameRate:number)
 		{
 			this.canvas = canvas;
@@ -79,6 +88,7 @@ namespace engines
 		clear()
 		{
 			this.overlays = [];
+			this.demoMouseDownHook = null;
 		}
 
 		public clearCanvas()
@@ -188,9 +198,13 @@ namespace engines
 		 *** Utility Methods
 		 */
 
-		protected addWarning(x, y, message:string, options?:OverlayOptions)
+		public addWarning(x, y, message:string, options?:OverlayOptions)
 		{
 			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning, options));
+		}
+		public addInfo(x, y, message:string, options?:OverlayOptions)
+		{
+			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Info, options));
 		}
 
 		/**
@@ -204,11 +218,13 @@ namespace engines
 		/**
 		 * Box utility.
 		 */
-		protected abstract createBox<T>(x:number, y:number, radius:number, pinned?:boolean):T;
+		protected abstract createBox<T>(x:number, y:number, width:number, height:number, pinned?:boolean):T;
 		/**
 		 * Circle utility.
 		 */
 		protected abstract createCircle<T>(x:number, y:number, radius:number, pinned?:boolean):T;
+
+		protected abstract createFromData(x:number, y:number, data:any);
 
 		static Box(x, y, w, h, format:VertFormat = VertFormat.Array, VertexClass:IVertex = null):Array<Array<number>|{x:number, y:number}|any>
 		{
@@ -274,9 +290,21 @@ namespace engines
 
 		protected onVelocityIterationsUpdate(iterations:number) { }
 
-		onMouseDown = (event) => { };
+		handleMouseDown(event?)
+		{
+			this.onMouseDown();
 
-		onMouseUp = (event) => { };
+			if(this.demoMouseDownHook && this.mouseAction == MouseAction.Idle)
+				this.demoMouseDownHook();
+		}
+		handleMouseUp(event?)
+		{
+			this.onMouseUp();
+			this.mouseAction = MouseAction.Idle;
+		}
+
+		protected onMouseDown() { }
+		protected onMouseUp() { }
 
 	}
 

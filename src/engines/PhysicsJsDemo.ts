@@ -101,13 +101,13 @@ namespace engines
 		{
 			throw new Error('PhysicsJs does not have the concept of shapes. createBody method not supported.');
 		}
-		protected createBox(x:number, y:number, radius:number, pinned?:boolean)
+		protected createBox(x:number, y:number, width:number, height:number, pinned?:boolean)
 		{
 			var body = this.pinBody(Physics.body('rectangle', {
 				x: x,
 				y: y,
-				width: radius * 2,
-				height: radius * 2,
+				width: width * 2,
+				height: height * 2,
 				restitution: 0.3
 			}), pinned);
 			this.bodies.push(body);
@@ -125,6 +125,11 @@ namespace engines
 			this.bodies.push(body);
 
 			return body;
+		}
+
+		protected createFromData(x:number, y:number, data:any)
+		{
+
 		}
 
 		/*
