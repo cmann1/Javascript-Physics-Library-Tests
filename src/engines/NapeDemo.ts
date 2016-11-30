@@ -209,6 +209,14 @@ namespace engines
 					{
 						impulse = bodyData.impulse;
 					}
+					if(bodyData.impulse instanceof Array)
+					{
+						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse.hasOwnProperty('x') && bodyData.impulse.hasOwnProperty('y'))
+					{
+						impulse = Vec2.weak(bodyData.impulse.x, bodyData.impulse.y);
+					}
 					else if(bodyData.impulse instanceof Function)
 					{
 						let impulseData = bodyData.impulse();

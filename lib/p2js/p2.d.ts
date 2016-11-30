@@ -442,6 +442,7 @@ declare namespace p2 {
 
     export interface BodyOptions {
 
+        type?: number,
         mass?: number;
         position?: number[];
         velocity?: number[];
@@ -522,6 +523,8 @@ declare namespace p2 {
         removeShape(shape: Shape): boolean;
         updateMassProperties(): void;
         applyForce(force: number[], worldPoint: number[]): void;
+        applyImpulse (impulse: number[],  relativePoint?: number[] ): void;
+        applyImpulseLocal  (impulse: number[],  relativePoint?: number[] ): void;
         toLocalFrame(out: number[], worldPoint: number[]): void;
         toWorldFrame(out: number[], localPoint: number[]): void;
         fromPolygon(path: number[][], options?: {

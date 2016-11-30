@@ -86,6 +86,7 @@ namespace engines
 		loadDemoBasic:() => void;
 		loadDemoStress:() => void;
 		loadDemoConstraints:() => void;
+		loadDemoRagdolls:() => void;
 
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
@@ -403,7 +404,119 @@ namespace engines
 
 		protected createFromData(x:number, y:number, data:any)
 		{
+			const WORLD_SCALE = this.worldScale;
+			const DEG2RAD = 1 / (180 / Math.PI);
 
+			const bodiesData = data.bodies;
+			const jointsData = data.joints;
+			const bodyRegistry:{[id:string]:Body} = {};
+
+			x *= WORLD_SCALE;
+			y *= WORLD_SCALE;
+
+			if(bodiesData)
+			for(let bodyData of bodiesData)
+			{
+				var body:Body = new Body({
+					position: [x + bodyData.x * WORLD_SCALE, y + bodyData.y * WORLD_SCALE],
+					mass: 1
+				});
+
+				if(bodyData.type === undefined || bodyData.type === 'dynamic')
+					body.type = Body.DYNAMIC;
+				else if(bodyData.type === 'static')
+					body.type = Body.STATIC;
+				else if(bodyData.type === 'kinematic')
+					body.type = Body.KINEMATIC;
+
+				this.world.addBody(body);
+				if(bodyData.id !== undefined)
+				{
+					bodyRegistry[bodyData.id] = body;
+				}
+
+				if(bodyData.shape)
+				{
+					const shapeData = bodyData.shape;
+					const shapeType = shapeData.type;
+
+					if(shapeType === 'box')
+						body.addShape(new Box(<any>{width: shapeData.width * WORLD_SCALE, height: shapeData.height * WORLD_SCALE}));
+					else if(shapeType === 'circle')
+						body.addShape(new Circle({radius: shapeData.radius * WORLD_SCALE}));
+					else
+						console.error(`Unsupported shape type "${shapeType}"`);
+
+					//
+					// Creating materials is a pain so I haven't bothered
+					//
+					// if(shapeData.density !== undefined)
+					// 	fixtureDef.density = shapeData.density;
+					// if(shapeData.friction !== undefined)
+					// 	fixtureDef.friction = shapeData.friction;
+					// if(shapeData.restitution !== undefined)
+					// 	fixtureDef.restitution = shapeData.restitution;
+				}
+
+				if(bodyData.impulse)
+				{
+					let impulse:number[];
+
+					if(bodyData.impulse instanceof Array)
+					{
+						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse.hasOwnProperty('x') && bodyData.impulse.hasOwnProperty('y'))
+					{
+						impulse = [bodyData.impulse.x, bodyData.impulse.y];
+					}
+					else if(bodyData.impulse instanceof Function)
+					{
+						let impulseData = bodyData.impulse();
+						impulse = [impulseData[0], impulseData[1]];
+					}
+
+					if(impulse)
+						body.applyImpulse([impulse[0] * WORLD_SCALE, impulse[1] * WORLD_SCALE]);
+				}
+
+			}
+
+			if(jointsData)
+			for(let jointData of jointsData)
+			{
+				const type = jointData.type;
+				const body1 = bodyRegistry[jointData.body1];
+				const body2 = bodyRegistry[jointData.body2];
+
+				if(!body1 || !body2)
+				{
+					console.error(`Cannot find body with id "${!body1 ? jointData.body1 : jointData.body2}"`);
+					continue;
+				}
+
+				if(type == 'revolute')
+				{
+					var worldAnchor = [x + jointData.worldAnchorX * WORLD_SCALE, y + jointData.worldAnchorY * WORLD_SCALE];
+					var joint:RevoluteConstraint = new RevoluteConstraint(body1, body2, { worldPivot: worldAnchor});
+					this.world.addConstraint(joint);
+					if(jointData.lowerLimit != undefined)
+					{
+						joint.lowerLimitEnabled = true;
+						joint.lowerLimit = jointData.lowerLimit * DEG2RAD;
+					}
+					if(jointData.upperLimit != undefined)
+					{
+						joint.upperLimitEnabled = true;
+						joint.upperLimit = jointData.upperLimit * DEG2RAD;
+					}
+					joint.collideConnected = jointData.collideConnected != undefined ? jointData.collideConnected : false;
+				}
+				else
+				{
+					console.error(`Unsupported joint type "${type}"`);
+				}
+			}
 		}
 
 		/*

@@ -302,9 +302,13 @@ namespace engines
 				{
 					let impulse:b2Vec2;
 
-					if(bodyData.impulse instanceof b2Vec2)
+					if(bodyData.impulse instanceof b2Vec2 || bodyData.impulse.hasOwnProperty('x') && bodyData.impulse.hasOwnProperty('y'))
 					{
 						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse instanceof Array)
+					{
+						impulse = new b2Vec2(bodyData.impulse[0], bodyData.impulse[1]);
 					}
 					else if(bodyData.impulse instanceof Function)
 					{

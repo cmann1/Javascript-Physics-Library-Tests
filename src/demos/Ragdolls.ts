@@ -310,13 +310,10 @@ namespace demos
 
 	namespace napeDemo
 	{
-		import Body = nape.phys.Body;
-
-		engines.NapeDemo.prototype.loadDemoRagdolls = function()
+		engines.DemoEngineBase.prototype.loadDemoCommon = function()
 		{
 			this.velocityIterations = VELOCITY_ITERATIONS;
 			this.positionIterations = POSITION_ITERATIONS;
-			this.space.gravity.setxy(0, 600);
 
 			showInfo(this, this.stageWidth);
 			this.createFromData(this.stageWidth / 4, 100, RAGDOLL_DATA);
@@ -332,6 +329,17 @@ namespace demos
 				ragdollCount++;
 				ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
 			}
+		}
+	}
+
+	namespace napeDemo
+	{
+		import Body = nape.phys.Body;
+
+		engines.NapeDemo.prototype.loadDemoRagdolls = function()
+		{
+			this.space.gravity.setxy(0, 600);
+			this.loadDemoCommon(0, 600);
 		};
 	}
 
@@ -346,24 +354,8 @@ namespace demos
 
 		engines.Box2dWebDemo.prototype.loadDemoRagdolls = function()
 		{
-			this.velocityIterations = VELOCITY_ITERATIONS;
-			this.positionIterations = POSITION_ITERATIONS;
 			this.world.SetGravity(new b2Vec2(0, 9.82));
-
-			showInfo(this, this.stageWidth);
-			this.createFromData(this.stageWidth / 4, 100, RAGDOLL_DATA);
-			this.createFromData(this.stageWidth / 4 * 3, 100, RAGDOLL_DATA);
-			this.createFromData(0, 0, createStairData(this.stageWidth, this.stageHeight));
-
-			ragdollCount = 2;
-			ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
-
-			this.demoMouseDownHook = () =>
-			{
-				this.createFromData(this.mouseX, this.mouseY, RAGDOLL_DATA);
-				ragdollCount++;
-				ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
-			}
+			this.loadDemoCommon();
 		};
 	}
 
@@ -371,10 +363,13 @@ namespace demos
 	{
 		import Body = p2.Body;
 
-		// engines.P2JsDemo.prototype.loadDemoRagdolls = function()
-		// {
-		//
-		// };
+		engines.P2JsDemo.prototype.loadDemoRagdolls = function()
+		{
+			const WORLD_SCALE = this.worldScale;
+
+			this.world.gravity = [0, 100 * WORLD_SCALE];
+			this.loadDemoCommon();
+		};
 	}
 
 	namespace matterDemo

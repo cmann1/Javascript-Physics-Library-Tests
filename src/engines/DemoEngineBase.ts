@@ -112,6 +112,8 @@ namespace engines
 			}
 		}
 
+		loadDemoCommon:(...args) => void;
+
 		/**
 		 * Runs this demo. Demos must not override this method and use runInternal instead.
 		 * @param deltaTime
