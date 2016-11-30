@@ -323,12 +323,17 @@ namespace demos
 			ragdollCount = 2;
 			ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
 
-			this.demoMouseDownHook = () =>
+			var mouseHook = () =>
 			{
 				this.createFromData(this.mouseX, this.mouseY, RAGDOLL_DATA);
 				ragdollCount++;
 				ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
-			}
+			};
+
+			if(!arguments.length || arguments[0] != 'mouseUp')
+				this.demoMouseDownHook = mouseHook;
+			else
+				this.demoMouseUpHook = mouseHook;
 		}
 	}
 
@@ -367,7 +372,7 @@ namespace demos
 		{
 			const WORLD_SCALE = this.worldScale;
 
-			this.world.gravity = [0, 100 * WORLD_SCALE];
+			this.world.gravity = [0, 600 * WORLD_SCALE];
 			this.loadDemoCommon();
 		};
 	}
@@ -378,16 +383,19 @@ namespace demos
 
 		engines.MatterDemo.prototype.loadDemoRagdolls = function()
 		{
-
+			this.world.gravity.x = 0;
+			this.world.gravity.y = 0.5;
+			this.loadDemoCommon('mouseUp');
 		};
 	}
 
 	namespace physicsJsDemo
 	{
-		// engines.PhysicsJsDemo.prototype.loadDemoRagdolls = function()
-		// {
-		//
-		// };
+		engines.PhysicsJsDemo.prototype.loadDemoRagdolls = function()
+		{
+			this.gravity.setAcceleration({x: 0, y: 0.0004});
+			this.loadDemoCommon();
+		};
 	}
 
 }

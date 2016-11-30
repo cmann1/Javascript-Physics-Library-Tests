@@ -538,7 +538,6 @@ namespace demos
 			const DRAW_SCALE = this.drawScale;
 			const WORLD_SCALE = this.worldScale;
 
-			this.engine.enableSleeping = true;
 			this.velocityIterations = VELOCITY_ITERATIONS;
 			this.positionIterations = POSITION_ITERATIONS;
 			this.world.gravity.x = 0;

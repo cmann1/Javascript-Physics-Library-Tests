@@ -64,6 +64,7 @@ namespace engines
 		protected overlays:Overlay[];
 
 		protected demoMouseDownHook:() => void;
+		protected demoMouseUpHook:() => void;
 		protected mouseAction:MouseAction;
 
 		constructor(canvas:HTMLCanvasElement, frameRate:number)
@@ -314,6 +315,10 @@ namespace engines
 		handleMouseUp(event?)
 		{
 			this.onMouseUp();
+
+			if(this.demoMouseUpHook && this.mouseAction == MouseAction.Idle)
+				this.demoMouseUpHook();
+
 			this.mouseAction = MouseAction.Idle;
 		}
 

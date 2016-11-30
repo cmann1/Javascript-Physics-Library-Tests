@@ -36,6 +36,8 @@ namespace engines
 		protected mouseConstraint:MouseConstraint;
 		protected groundBody:Body;
 
+		protected mousePressed = false;
+
 		setup()
 		{
 			super.clear();
@@ -81,6 +83,7 @@ namespace engines
 
 			this.simulationTime = 0;
 			this.elapsedTime = 0;
+			this.engine.enableSleeping = true;
 			World.clear(this.world, false);
 		}
 
@@ -100,6 +103,14 @@ namespace engines
 			}
 
 			this.simulationTime += deltaTime;
+
+			if(this.mousePressed)
+			{
+				if(this.mouseConstraint.body)
+				{
+					this.mouseAction = MouseAction.Handled;
+				}
+			}
 
 			// Keep on stepping forward by fixed time step until amount of time
 			// needed has been simulated.
@@ -156,7 +167,120 @@ namespace engines
 
 		protected createFromData(x:number, y:number, data:any)
 		{
+			const WORLD_SCALE = this.worldScale;
+			const DEG2RAD = 1 / (180 / Math.PI);
 
+			const bodiesData = data.bodies;
+			const jointsData = data.joints;
+			const bodyRegistry:{[id:string]:Body} = {};
+
+			// x *= WORLD_SCALE;
+			// y *= WORLD_SCALE;
+
+			if(bodiesData)
+			for(let bodyData of bodiesData)
+			{
+				let isStatic:boolean;
+				let px = x + bodyData.x;
+				let py = y + bodyData.y;
+				let body;
+
+				if(!bodyData.shape) continue;
+
+				if(bodyData.type === undefined || bodyData.type === 'dynamic')
+					isStatic = false;
+				else if(bodyData.type === 'static')
+					isStatic = true;
+				else if(bodyData.type === 'kinematic')
+					isStatic = false;
+
+				const shapeData = bodyData.shape;
+				const shapeType = shapeData.type;
+				const options = {isStatic: isStatic};
+
+				if(shapeType === 'box')
+					body = Bodies.rectangle(px, py, shapeData.width, shapeData.height, options);
+				else if(shapeType === 'circle')
+					body = Bodies.circle(px, py, shapeData.radius, options);
+				else
+					console.error(`Unsupported shape type "${shapeType}"`);
+
+				if(shapeData.density !== undefined)
+					body.density = shapeData.density;
+				if(shapeData.friction !== undefined)
+					body.friction = shapeData.friction;
+				if(shapeData.restitution !== undefined)
+					body.restitution = shapeData.restitution;
+
+				World.add(this.world, body);
+				if(bodyData.id !== undefined)
+				{
+					bodyRegistry[bodyData.id] = body;
+				}
+
+				if(bodyData.impulse)
+				{
+					let impulse:Vector;
+
+					if(bodyData.impulse.hasOwnProperty('x') && bodyData.impulse.hasOwnProperty('y'))
+					{
+						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse instanceof Array)
+					{
+						impulse = Vector.create(bodyData.impulse[0], bodyData.impulse[1]);
+					}
+					else if(bodyData.impulse instanceof Function)
+					{
+						let impulseData = bodyData.impulse();
+						impulse = Vector.create(impulseData[0], impulseData[1]);
+					}
+
+					if(impulse)
+						Body.applyForce(body, Vector.create(px, py), Vector.create(impulse.x / 10000, impulse.y / 10000));
+				}
+			}
+
+			if(jointsData)
+			for(let jointData of jointsData)
+			{
+				const type = jointData.type;
+				const body1 = bodyRegistry[jointData.body1];
+				const body2 = bodyRegistry[jointData.body2];
+
+				if(!body1 || !body2)
+				{
+					console.error(`Cannot find body with id "${!body1 ? jointData.body1 : jointData.body2}"`);
+					continue;
+				}
+
+				if(type == 'revolute')
+				{
+					var worldPivot = Vector.create(x + jointData.worldAnchorX, y + jointData.worldAnchorY);
+					var joint = Constraint.create({
+						bodyA: body1,
+						bodyB: body2,
+						pointA: MatterDemo.globalToLocal(body1, worldPivot),
+						pointB: MatterDemo.globalToLocal(body2, worldPivot),
+						stiffness: 0.1,
+						length: 2
+					});
+					World.add(this.world, joint);
+
+					// if(jointData.lowerLimit != undefined || jointData.upperLimit != undefined)
+					// {
+					// 	jointDef.enableLimit = true;
+					// 	if(jointData.lowerLimit != undefined)
+					// 		jointDef.lowerAngle = jointData.lowerLimit * DEG2RAD;
+					// 	if(jointData.upperLimit != undefined)
+					// 		jointDef.upperAngle = jointData.upperLimit * DEG2RAD;
+					// }
+				}
+				else
+				{
+					console.error(`Unsupported joint type "${type}"`);
+				}
+			}
 		}
 
 		public static globalToLocal(body:Body, worldPoint:Vector, out:Vector = null)
@@ -188,6 +312,16 @@ namespace engines
 		protected onVelocityIterationsUpdate(iterations:number)
 		{
 			this.engine.velocityIterations = iterations;
+		}
+
+		onMouseDown()
+		{
+			this.mousePressed = true;
+		}
+
+		onMouseUp()
+		{
+			this.mousePressed = false;
 		}
 
 	}
