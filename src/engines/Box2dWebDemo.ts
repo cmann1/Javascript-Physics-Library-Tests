@@ -313,7 +313,7 @@ namespace engines
 					}
 
 					if(impulse)
-						body.ApplyImpulse(impulse, body.GetWorldCenter());
+						body.ApplyImpulse(new b2Vec2(impulse.x * WORLD_SCALE, impulse.y * WORLD_SCALE), body.GetWorldCenter());
 				}
 			}
 
@@ -344,6 +344,7 @@ namespace engines
 					}
 
 					jointDef.Initialize(body1, body2, new b2Vec2(x + jointData.worldAnchorX * WORLD_SCALE, y + jointData.worldAnchorY * WORLD_SCALE));
+					jointDef.collideConnected = jointData.collideConnected != undefined ? jointData.collideConnected : false;
 					this.world.CreateJoint(jointDef);
 				}
 				else

@@ -23,7 +23,7 @@ namespace demos
 
 	function ragdollImpulse()
 	{
-		const MAX_FORCE = 25;
+		const MAX_FORCE = 500;
 		return [Math.random() * MAX_FORCE * 2 - MAX_FORCE, Math.random() * MAX_FORCE * 2 - MAX_FORCE];
 	}
 
@@ -260,9 +260,13 @@ namespace demos
 	};
 	var STAIR_DATA = null;
 
+	var ragdollCount;
+	var ragdollCountOverlay;
+	const RAGDOLL_COUNT_TEXT = 'Ragdolls: $N';
 	function showInfo(engine:DemoEngineBase, width)
 	{
 		engine.addInfo(width / 2, 5, 'Left click to add more ragdolls', {valign: 'top'});
+		ragdollCountOverlay = engine.addOverlay(width - 5, 5, RAGDOLL_COUNT_TEXT.replace(/\$N/g, '0'), null, {valign: 'top', halign: 'right'});
 	}
 
 	function createStairData(stageWidth:number, stageHeight:number):any
@@ -308,10 +312,27 @@ namespace demos
 	{
 		import Body = nape.phys.Body;
 
-		// engines.NapeDemo.prototype.loadDemoRagdolls = function()
-		// {
-		//
-		// };
+		engines.NapeDemo.prototype.loadDemoRagdolls = function()
+		{
+			this.velocityIterations = VELOCITY_ITERATIONS;
+			this.positionIterations = POSITION_ITERATIONS;
+			this.space.gravity.setxy(0, 600);
+
+			showInfo(this, this.stageWidth);
+			this.createFromData(this.stageWidth / 4, 100, RAGDOLL_DATA);
+			this.createFromData(this.stageWidth / 4 * 3, 100, RAGDOLL_DATA);
+			this.createFromData(0, 0, createStairData(this.stageWidth, this.stageHeight));
+
+			ragdollCount = 2;
+			ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
+
+			this.demoMouseDownHook = () =>
+			{
+				this.createFromData(this.mouseX, this.mouseY, RAGDOLL_DATA);
+				ragdollCount++;
+				ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
+			}
+		};
 	}
 
 	namespace box2dWebDemo
@@ -334,9 +355,14 @@ namespace demos
 			this.createFromData(this.stageWidth / 4 * 3, 100, RAGDOLL_DATA);
 			this.createFromData(0, 0, createStairData(this.stageWidth, this.stageHeight));
 
+			ragdollCount = 2;
+			ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
+
 			this.demoMouseDownHook = () =>
 			{
 				this.createFromData(this.mouseX, this.mouseY, RAGDOLL_DATA);
+				ragdollCount++;
+				ragdollCountOverlay.text = RAGDOLL_COUNT_TEXT.replace(/\$N/g, ragdollCount);
 			}
 		};
 	}

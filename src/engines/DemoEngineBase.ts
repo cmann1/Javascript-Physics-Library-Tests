@@ -6,6 +6,7 @@ namespace engines
 	import Overlay = overlay.Overlay;
 	import OverlayIcons = overlay.OverlayIcons;
 	import OverlayOptions = overlay.OverlayOptions;
+	import OverlayIconDef = overlay.OverlayIcons.OverlayIconDef;
 
 	export enum VertFormat
 	{
@@ -198,13 +199,20 @@ namespace engines
 		 *** Utility Methods
 		 */
 
+		public addOverlay(x, y, message:string, icon:OverlayIconDef = null, options?:OverlayOptions)
+		{
+			this.overlays.push(new Overlay(x, y, message, icon, options));
+			return this.overlays[this.overlays.length - 1];
+		}
 		public addWarning(x, y, message:string, options?:OverlayOptions)
 		{
 			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Warning, options));
+			return this.overlays[this.overlays.length - 1];
 		}
 		public addInfo(x, y, message:string, options?:OverlayOptions)
 		{
 			this.overlays.push(new Overlay(x, y, message, OverlayIcons.Info, options));
+			return this.overlays[this.overlays.length - 1];
 		}
 
 		/**
