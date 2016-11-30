@@ -92,10 +92,6 @@ namespace engines
 			World.addConstraint(this.world, this.mouseConstraint.constraint);
 		}
 
-		loadDemoBasic:() => void;
-		loadDemoStress:() => void;
-		loadDemoConstraints:() => void;
-
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(deltaTime > 0.05)

@@ -129,11 +129,6 @@ namespace engines
 			super.loadDemo(name);
 		}
 
-		loadDemoBasic:() => void;
-		loadDemoStress:() => void;
-		loadDemoConstraints:() => void;
-		loadDemoRagdolls:() => void;
-
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(deltaTime > 0.05)

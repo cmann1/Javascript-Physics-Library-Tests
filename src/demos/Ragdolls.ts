@@ -376,10 +376,10 @@ namespace demos
 	{
 		import Body = Matter.Body;
 
-		// engines.MatterDemo.prototype.loadDemoRagdolls = function()
-		// {
-		//
-		// };
+		engines.MatterDemo.prototype.loadDemoRagdolls = function()
+		{
+
+		};
 	}
 
 	namespace physicsJsDemo

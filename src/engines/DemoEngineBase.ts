@@ -113,6 +113,10 @@ namespace engines
 		}
 
 		loadDemoCommon:(...args) => void;
+		loadDemoBasic:() => void;
+		loadDemoStress:() => void;
+		loadDemoConstraints:() => void;
+		loadDemoRagdolls:() => void;
 
 		/**
 		 * Runs this demo. Demos must not override this method and use runInternal instead.

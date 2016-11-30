@@ -82,11 +82,6 @@ namespace engines
 			this.handJoint.stiff = false;
 		}
 
-		loadDemoBasic:() => void;
-		loadDemoConstraints:() => void;
-		loadDemoStress:() => void;
-		loadDemoRagdolls:() => void;
-
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(deltaTime > 0.05)

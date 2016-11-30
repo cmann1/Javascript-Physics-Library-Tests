@@ -75,10 +75,6 @@ namespace engines
 			super.loadDemo(name);
 		}
 
-		loadDemoBasic:()=>void;
-		loadDemoStress:() => void;
-		loadDemoConstraints:() => void;
-
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			this.world.step(timestamp);

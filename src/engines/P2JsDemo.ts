@@ -83,11 +83,6 @@ namespace engines
 			this.world.addBody(groundBody);
 		}
 
-		loadDemoBasic:() => void;
-		loadDemoStress:() => void;
-		loadDemoConstraints:() => void;
-		loadDemoRagdolls:() => void;
-
 		protected runInternal(deltaTime:number, timestamp:number)
 		{
 			if(this.handJoint)
