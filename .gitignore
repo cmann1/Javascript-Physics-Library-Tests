@@ -48,5 +48,3 @@ Temporary Items
 .idea/*
 src/**/*.js.map
 src/**/*.js
-build/**/*.js.map
-build/**/*.js
