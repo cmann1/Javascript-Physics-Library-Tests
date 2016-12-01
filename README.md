@@ -9,9 +9,10 @@ I've tried to keep the demos as similar as possible across engines to allow them
 ## Demos
 - **Basic** - Randomly creates simple bodies.
 - **Constraints** - Compares similar constraints available in each engine.
+- **Ragdoll** - How well does each engine handle rag dolls?
 - **Stress** - Creates a large number of bodies - a good way to measure the performance of each engine.
 
-A lot of these tests have been adapted from the Nape website.
+A lot of these tests have been adapted from the Nape and Box2DFlash websites.
 
 ## Libraries
 - **Nape** - http://napephys.com/
