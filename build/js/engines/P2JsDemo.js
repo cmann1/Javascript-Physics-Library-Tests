@@ -78,6 +78,7 @@ var engines;
         P2JsDemo.prototype.render = function () {
             var context = this.context;
             context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            context.lineWidth = 1;
             this.renderBodies(this.world, context);
             this.renderConstraints(this.world, context);
         };
