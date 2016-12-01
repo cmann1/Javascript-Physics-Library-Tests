@@ -21,7 +21,7 @@ var app;
             var _this = this;
             this.engines = [];
             this.engineIndex = -1;
-            this.currentDemo = 2;
+            this.currentDemo = 0;
             this.mouseX = 0;
             this.mouseY = 0;
             this.canvasRightMouseDown = false;
@@ -76,7 +76,7 @@ var app;
                 _this.engines.push(new P2JsDemo(_this.canvas, frameRate));
                 _this.engines.push(new MatterDemo(_this.canvas, frameRate));
                 _this.engines.push(new PhysicsJsDemo(_this.canvas, frameRate));
-                _this.loadEngine(4);
+                _this.loadEngine(0);
                 // this.loadEngine(this.engines.length - 1);
                 $(window)
                     .on('focus', _this.onWindowFocus)

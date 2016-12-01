@@ -44,7 +44,7 @@ namespace app
 		private engines:DemoEngineBase[] = [];
 		private engineIndex = -1;
 		private currentEngine:DemoEngineBase;
-		private currentDemo:number = 2;
+		private currentDemo:number = 0;
 
 		private ticker:Ticker;
 
@@ -271,7 +271,7 @@ namespace app
 			this.engines.push(new P2JsDemo(this.canvas, frameRate));
 			this.engines.push(new MatterDemo(this.canvas, frameRate));
 			this.engines.push(new PhysicsJsDemo(this.canvas, frameRate));
-			this.loadEngine(4);
+			this.loadEngine(0);
 			// this.loadEngine(this.engines.length - 1);
 
 			$(window)
