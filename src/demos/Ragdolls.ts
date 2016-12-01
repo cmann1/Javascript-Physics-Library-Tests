@@ -385,7 +385,9 @@ namespace demos
 		{
 			this.world.gravity.x = 0;
 			this.world.gravity.y = 0.5;
-			this.loadDemoCommon('mouseUp');
+			this.loadDemoCommon('mouseUp'); // Create ragdolls on mouse up because this has it's own interaction handlers
+
+			this.addWarning(this.stageWidth / 2, this.stageHeight - 10, 'Not any features to properly support ragdolls', {valign: 'bottom'})
 		};
 	}
 
@@ -394,7 +396,9 @@ namespace demos
 		engines.PhysicsJsDemo.prototype.loadDemoRagdolls = function()
 		{
 			this.gravity.setAcceleration({x: 0, y: 0.0004});
-			this.loadDemoCommon();
+			this.loadDemoCommon('mouseUp'); // Create ragdolls on mouse up because this has it's own interaction handlers
+
+			this.addWarning(this.stageWidth / 2, this.stageHeight - 10, 'Not any features to properly support ragdolls', {valign: 'bottom'})
 		};
 	}
 

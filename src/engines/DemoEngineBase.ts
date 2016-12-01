@@ -66,6 +66,7 @@ namespace engines
 		protected demoMouseDownHook:() => void;
 		protected demoMouseUpHook:() => void;
 		protected mouseAction:MouseAction;
+		protected mousePressed = false;
 
 		constructor(canvas:HTMLCanvasElement, frameRate:number)
 		{
@@ -307,6 +308,7 @@ namespace engines
 
 		handleMouseDown(event?)
 		{
+			this.mousePressed = true;
 			this.onMouseDown();
 
 			if(this.demoMouseDownHook && this.mouseAction == MouseAction.Idle)
@@ -314,6 +316,7 @@ namespace engines
 		}
 		handleMouseUp(event?)
 		{
+			this.mousePressed = false;
 			this.onMouseUp();
 
 			if(this.demoMouseUpHook && this.mouseAction == MouseAction.Idle)

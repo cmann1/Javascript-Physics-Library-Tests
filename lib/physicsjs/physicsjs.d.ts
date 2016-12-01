@@ -40,6 +40,7 @@ interface PhysicsBody
 {
 	treatment:'dynamic'|'kinematic'|'static';
 	addChild(body:PhysicsBody):PhysicsBody;
+	applyForce(force:Vectorish, p?):PhysicsBody;
 	clear():PhysicsBody;
 }
 

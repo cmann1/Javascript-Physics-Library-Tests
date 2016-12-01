@@ -52,6 +52,8 @@ namespace engines
 							iterations: 3
 						})
 					]);
+
+					world.on('interact:grab', this.onBodyGrab.bind(this));
 				}
 			);
 		}
@@ -125,12 +127,127 @@ namespace engines
 
 		protected createFromData(x:number, y:number, data:any)
 		{
+			const WORLD_SCALE = this.worldScale;
+			const DEG2RAD = 1 / (180 / Math.PI);
 
+			const bodiesData = data.bodies;
+			const jointsData = data.joints;
+			const bodyRegistry:{[id:string]:PhysicsBody} = {};
+			const bodies = [];
+
+			x *= WORLD_SCALE;
+			y *= WORLD_SCALE;
+
+			if(bodiesData)
+			for(let bodyData of bodiesData)
+			{
+				if(!bodyData.shape)
+				{
+					continue;
+				}
+
+				let bodyType:string;
+				let options:any = {
+					x: x + bodyData.x * WORLD_SCALE,
+					y: y + bodyData.y * WORLD_SCALE
+				};
+
+				if(bodyData.type === undefined || bodyData.type === 'dynamic')
+					options.treatment = 'dynamic';
+				else if(bodyData.type === 'static')
+					options.treatment = 'static';
+				else if(bodyData.type === 'kinematic')
+					options.treatment = 'kinematic';
+
+				const shapeData = bodyData.shape;
+				const shapeType = shapeData.type;
+
+				if(shapeType === 'box')
+				{
+					bodyType = 'rectangle';
+					options.width = shapeData.width * WORLD_SCALE;
+					options.height = shapeData.height * WORLD_SCALE;
+				}
+				else if(shapeType === 'circle')
+				{
+					bodyType = 'circle';
+					options.radius = shapeData.radius * WORLD_SCALE;
+				}
+				else
+					console.error(`Unsupported shape type "${shapeType}"`);
+
+				// if(shapeData.density !== undefined)
+				// 	options.density = shapeData.density;
+				if(shapeData.friction !== undefined)
+					options.cof = shapeData.friction;
+				if(shapeData.restitution !== undefined)
+					options.restitution = shapeData.restitution;
+
+				var body:PhysicsBody = Physics.body(bodyType, options);
+				this.bodies.push(body);
+				bodies.push(body);
+				if(bodyData.id !== undefined)
+				{
+					bodyRegistry[bodyData.id] = body;
+				}
+
+				if(bodyData.impulse)
+				{
+					let impulse:{x,y};
+
+					if(bodyData.impulse.hasOwnProperty('x') && bodyData.impulse.hasOwnProperty('y'))
+					{
+						impulse = bodyData.impulse;
+					}
+					else if(bodyData.impulse instanceof Array)
+					{
+						impulse = {x: bodyData.impulse[0], y: bodyData.impulse[1]};
+					}
+					else if(bodyData.impulse instanceof Function)
+					{
+						let impulseData = bodyData.impulse();
+						impulse = {x: impulseData[0], y: impulseData[1]};
+					}
+
+					if(impulse)
+						body.applyForce({x: impulse.x / 10000 * WORLD_SCALE, y: impulse.y / 10000 * WORLD_SCALE});
+				}
+			}
+
+			this.world.add(bodies);
+
+			if(jointsData)
+			for(let jointData of jointsData)
+			{
+				const type = jointData.type;
+				const body1 = bodyRegistry[jointData.body1];
+				const body2 = bodyRegistry[jointData.body2];
+
+				if(!body1 || !body2)
+				{
+					console.error(`Cannot find body with id "${!body1 ? jointData.body1 : jointData.body2}"`);
+					continue;
+				}
+
+				if(type == 'revolute')
+				{
+					this.constraints.distanceConstraint(body1, body2);
+				}
+				else
+				{
+					console.error(`Unsupported joint type "${type}"`);
+				}
+			}
 		}
 
 		/*
 		 *** Events
 		 */
+
+		protected onBodyGrab(data)
+		{
+			this.mouseAction = MouseAction.Handled;
+		}
 
 	}
 

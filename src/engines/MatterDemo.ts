@@ -314,16 +314,6 @@ namespace engines
 			this.engine.velocityIterations = iterations;
 		}
 
-		onMouseDown()
-		{
-			this.mousePressed = true;
-		}
-
-		onMouseUp()
-		{
-			this.mousePressed = false;
-		}
-
 	}
 
 }
